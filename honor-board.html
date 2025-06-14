@@ -47,6 +47,8 @@
     .medal {font-size:22px;}
     .group {font-size:15px;color:#1e88e5;}
     .participant-number {font-weight:bold;color:#e53935;}
+    .filter-bar {text-align:center; margin-bottom:20px;}
+    .filter-bar select {padding:8px 14px; border-radius:8px;}
     footer {font-size:14px;color:#555;padding:8px 10px;text-align:center;}
   </style>
 </head>
@@ -67,6 +69,13 @@
   <div class="container">
     <div class="back-home">
       <a href="index.html">🏠 العودة للرئيسية</a>
+    </div>
+    <div class="filter-bar">
+      <label for="groupFilter" style="font-weight:bold;">فلترة حسب الفئة العمرية:</label>
+      <select id="groupFilter">
+        <option value="">الكل</option>
+        <!-- سيتم ملء القيم تلقائيًا -->
+      </select>
     </div>
     <h2>الترتيب التراكمي لجميع المشاركين</h2>
     <table>
@@ -103,6 +112,11 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
+
+    let allParticipants = {};
+    let allTotals = {};
+    let groupList = [];
+
     function handleNavDisplay(user) {
       if (user) {
         document.getElementById("adminLink").style.display = "inline-block";
@@ -128,43 +142,45 @@
       handleNavDisplay(auth.currentUser);
     });
 
-    // لوحة الشرف التراكمية + تنسيق قديم (الاسم - رقم المشارك - العمر - رقم الوحدة - الفئة العمرية - مجموع النقاط)
-    async function buildHonorBoard() {
-      const honorBody = document.getElementById("honor-body");
-      honorBody.innerHTML = "<tr><td colspan='8'>جارٍ الحساب...</td></tr>";
-      // 1. جلب جميع المشاركين
+    // دالة جلب المشاركين والفئات العمرية مرة واحدة
+    async function loadParticipantsAndGroups() {
       const participantsSnap = await getDocs(collection(db, "participants"));
-      const participants = {};
+      allParticipants = {};
+      let groupSet = new Set();
       participantsSnap.forEach(docSnap => {
         const d = docSnap.data();
-        participants[d.participantNumber] = d;
+        allParticipants[d.participantNumber] = d;
+        if (d.group) groupSet.add(d.group);
       });
+      groupList = Array.from(groupSet);
+      // ملء قائمة الفئات
+      const groupFilter = document.getElementById("groupFilter");
+      groupList.sort((a,b)=>a.localeCompare(b,"ar"));
+      groupList.forEach(gr => {
+        const opt = document.createElement("option");
+        opt.value = gr;
+        opt.textContent = gr;
+        groupFilter.appendChild(opt);
+      });
+    }
 
-      // 2. جلب كل مسابقات
-      const contestsSnap = await getDocs(collection(db, "contests"));
-      const contestIds = contestsSnap.docs.map(doc => doc.id);
-
-      // 3. جلب نتائج كل مسابقة
-      let participantTotals = {}; // participantNum => totalPoints
-      for (const contestId of contestIds) {
-        const scoreSnap = await getDoc(doc(db, "contestScores", contestId));
-        if (scoreSnap.exists() && scoreSnap.data().scores) {
-          Object.entries(scoreSnap.data().scores).forEach(([partNum, points]) => {
-            participantTotals[partNum] = (participantTotals[partNum] || 0) + points;
-          });
-        }
-      }
-
-      // 4. بناء صفوف الترتيب
-      let rows = Object.entries(participantTotals)
-        .map(([partNum, totalPoints]) => ({
-          partNum,
-          name: participants[partNum]?.name || "غير معروف",
-          age: participants[partNum]?.age || "",
-          guardian: participants[partNum]?.guardian || "",
-          group: participants[partNum]?.group || "",
-          totalPoints
-        }))
+    // بناء صفوف لوحة الشرف مع الفلترة
+    function buildHonorTable(filterGroup="") {
+      const honorBody = document.getElementById("honor-body");
+      // بناء صفوف الترتيب
+      let rows = Object.entries(allTotals)
+        .map(([partNum, totalPoints]) => {
+          const d = allParticipants[partNum] || {};
+          return {
+            partNum,
+            name: d.name || "غير معروف",
+            age: d.age || "",
+            guardian: d.guardian || "",
+            group: d.group || "",
+            totalPoints
+          }
+        })
+        .filter(row => !filterGroup || row.group === filterGroup)
         .sort((a, b) => b.totalPoints - a.totalPoints);
 
       if (!rows.length) {
@@ -172,7 +188,6 @@
         return;
       }
 
-      // 5. طباعة مع الميداليات
       let html = "";
       rows.forEach((row, idx) => {
         let medal = "";
@@ -193,7 +208,36 @@
       honorBody.innerHTML = html;
     }
 
-    buildHonorBoard();
+    // جلب وتجميع جميع النقاط التراكمية (مرة واحدة)
+    async function calcAllTotals() {
+      // جلب كل مسابقات
+      const contestsSnap = await getDocs(collection(db, "contests"));
+      const contestIds = contestsSnap.docs.map(doc => doc.id);
+
+      // جلب نتائج كل مسابقة
+      let participantTotals = {}; // participantNum => totalPoints
+      for (const contestId of contestIds) {
+        const scoreSnap = await getDoc(doc(db, "contestScores", contestId));
+        if (scoreSnap.exists() && scoreSnap.data().scores) {
+          Object.entries(scoreSnap.data().scores).forEach(([partNum, points]) => {
+            participantTotals[partNum] = (participantTotals[partNum] || 0) + points;
+          });
+        }
+      }
+      allTotals = participantTotals;
+    }
+
+    // التهيئة الشاملة
+    async function initHonorBoard() {
+      await loadParticipantsAndGroups();
+      await calcAllTotals();
+      buildHonorTable("");
+      document.getElementById("groupFilter").addEventListener("change", function() {
+        buildHonorTable(this.value);
+      });
+    }
+
+    initHonorBoard();
   </script>
 </body>
 </html>
