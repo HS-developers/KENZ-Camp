@@ -5,101 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>تسجيل المشاركين - مخيم كنز</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
-      authDomain: "kenz-camp.firebaseapp.com",
-      databaseURL: "https://kenz-camp-default-rtdb.firebaseio.com",
-      projectId: "kenz-camp",
-      storageBucket: "kenz-camp.appspot.com",
-      messagingSenderId: "238149901596",
-      appId: "1:238149901596:web:7f5f18eb007dc564e0aed9",
-      measurementId: "G-E0E6SG8YE8"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('registrationForm');
-      const ageInput = form.age;
-      const groupSelect = form.group;
-      const hiddenGroup = form.groupHidden;
-      const ageWarning = document.getElementById('age-warning');
-      const submitBtn = document.getElementById('submit-btn');
-
-      function updateGroup(age) {
-        if (age >= 10 && age <= 12) {
-          groupSelect.value = "10-12";
-          hiddenGroup.value = "10-12";
-          ageWarning.textContent = "";
-          submitBtn.disabled = false;
-        } else if (age >= 13 && age <= 15) {
-          groupSelect.value = "13-15";
-          hiddenGroup.value = "13-15";
-          ageWarning.textContent = "";
-          submitBtn.disabled = false;
-        } else if (age >= 16 && age <= 18) {
-          groupSelect.value = "16-18";
-          hiddenGroup.value = "16-18";
-          ageWarning.textContent = "";
-          submitBtn.disabled = false;
-        } else {
-          groupSelect.value = "";
-          hiddenGroup.value = "";
-          ageWarning.textContent = "⚠️ يُسمح فقط بالأعمار من 10 إلى 18 سنة.";
-          submitBtn.disabled = true;
-        }
-      }
-
-      ageInput.addEventListener('input', () => {
-        const age = parseInt(ageInput.value);
-        if (!isNaN(age)) {
-          updateGroup(age);
-        } else {
-          groupSelect.value = "";
-          hiddenGroup.value = "";
-          ageWarning.textContent = "";
-          submitBtn.disabled = false;
-        }
-      });
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = form.name.value;
-        const age = form.age.value;
-        const guardian = form.guardian.value;
-        const phone = form.phone.value;
-        const group = form.groupHidden.value;
-        const timestamp = new Date();
-
-        const uniqueId = `KZ-${timestamp.toISOString().slice(0,10).replaceAll('-', '')}-${Date.now().toString().slice(-6)}`;
-
-        try {
-          await addDoc(collection(db, "participants"), {
-            name,
-            age,
-            guardian,
-            phone,
-            group,
-            participantNumber: uniqueId,
-            timestamp
-          });
-          alert(`تم التسجيل بنجاح 🎉\nرقم المشارك الخاص بك: ${uniqueId}`);
-          form.reset();
-          groupSelect.value = "";
-          hiddenGroup.value = "";
-          ageWarning.textContent = "";
-        } catch (error) {
-          alert("حدث خطأ أثناء التسجيل ❌");
-          console.error("Error adding document: ", error);
-        }
-      });
-    });
-  </script>
   <style>
     body {
       font-family: 'Cairo', sans-serif;
@@ -203,6 +108,8 @@
       justify-content: center;
       gap: 10px;
       max-width: 450px;
+      margin-bottom: 10px;
+      margin-top: 10px;
     }
 
     .nav a {
@@ -214,12 +121,31 @@
       text-decoration: none;
       font-size: 14px;
       min-width: 120px;
+      transition: background 0.2s;
+    }
+    .nav a#adminLink {
+      background-color: #8e24aa;
+    }
+    .nav a#loginLink {
+      background-color: #ff9800;
+      color: #fff;
+      font-weight: bold;
+    }
+    .nav a:hover {
+      background-color: #0056b3;
+    }
+    .nav a#adminLink:hover {
+      background-color: #5e1972;
+    }
+    .nav a#loginLink:hover {
+      background-color: #e65100;
     }
 
     footer {
       font-size: 14px;
       color: #555;
       padding: 6px 10px;
+      position: relative;
     }
   </style>
 </head>
@@ -259,16 +185,117 @@
         <button type="submit" id="submit-btn">تسجيل</button>
       </form>
     </div>
-
     <div class="nav">
-      <a href="participants.html">👥 عرض المشاركين</a>
+      <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين</a>
       <a href="schedule.html">📅 الجدول الزمني</a>
       <a href="points.html">🏅 نظام النقاط</a>
+      <a href="login.html" id="loginLink">دخول المشرفين</a>
     </div>
   </div>
-
   <footer>
     All Right Reserved © 2025 Genius Tech Co
   </footer>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
+      authDomain: "kenz-camp.firebaseapp.com",
+      databaseURL: "https://kenz-camp-default-rtdb.firebaseio.com",
+      projectId: "kenz-camp",
+      storageBucket: "kenz-camp.appspot.com",
+      messagingSenderId: "238149901596",
+      appId: "1:238149901596:web:7f5f18eb007dc564e0aed9",
+      measurementId: "G-E0E6SG8YE8"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // إظهار زر الإدارة للمشرفين فقط
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById("adminLink").style.display = "inline-block";
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('registrationForm');
+      const ageInput = form.age;
+      const groupSelect = form.group;
+      const hiddenGroup = form.groupHidden;
+      const ageWarning = document.getElementById('age-warning');
+      const submitBtn = document.getElementById('submit-btn');
+
+      function updateGroup(age) {
+        if (age >= 10 && age <= 12) {
+          groupSelect.value = "10-12";
+          hiddenGroup.value = "10-12";
+          ageWarning.textContent = "";
+          submitBtn.disabled = false;
+        } else if (age >= 13 && age <= 15) {
+          groupSelect.value = "13-15";
+          hiddenGroup.value = "13-15";
+          ageWarning.textContent = "";
+          submitBtn.disabled = false;
+        } else if (age >= 16 && age <= 18) {
+          groupSelect.value = "16-18";
+          hiddenGroup.value = "16-18";
+          ageWarning.textContent = "";
+          submitBtn.disabled = false;
+        } else {
+          groupSelect.value = "";
+          hiddenGroup.value = "";
+          ageWarning.textContent = "⚠️ يُسمح فقط بالأعمار من 10 إلى 18 سنة.";
+          submitBtn.disabled = true;
+        }
+      }
+
+      ageInput.addEventListener('input', () => {
+        const age = parseInt(ageInput.value);
+        if (!isNaN(age)) {
+          updateGroup(age);
+        } else {
+          groupSelect.value = "";
+          hiddenGroup.value = "";
+          ageWarning.textContent = "";
+          submitBtn.disabled = false;
+        }
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = form.name.value;
+        const age = form.age.value;
+        const guardian = form.guardian.value;
+        const phone = form.phone.value;
+        const group = form.groupHidden.value;
+        const timestamp = new Date();
+
+        const uniqueId = `KZ-${timestamp.toISOString().slice(0,10).replaceAll('-', '')}-${Date.now().toString().slice(-6)}`;
+
+        try {
+          await addDoc(collection(db, "participants"), {
+            name,
+            age,
+            guardian,
+            phone,
+            group,
+            participantNumber: uniqueId,
+            timestamp
+          });
+          alert(`تم التسجيل بنجاح 🎉\nرقم المشارك الخاص بك: ${uniqueId}`);
+          form.reset();
+          groupSelect.value = "";
+          hiddenGroup.value = "";
+          ageWarning.textContent = "";
+        } catch (error) {
+          alert("حدث خطأ أثناء التسجيل ❌");
+          console.error("Error adding document: ", error);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
