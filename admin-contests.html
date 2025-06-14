@@ -16,16 +16,23 @@
     table {width:100%; border-collapse:collapse; margin-top:30px;}
     th,td {border:1px solid #ddd;padding:8px;text-align:center;}
     th {background:#e3f2fd;}
-    .btns button {margin:0 3px;}
-    .editRow input {width:90%;}
     .participants-list {margin-top:10px; max-height:180px; overflow:auto; border:1px solid #eee; border-radius:8px; background:#fafafa;}
     .participants-list label {display:block; padding:6px 8px; cursor:pointer;}
     .participants-list label:hover {background:#e3f2fd;}
     .select-all-label {background:#e0e0e0; border-bottom:1px solid #ccc;}
+    .back-home {text-align:right; margin: 15px 0;}
+    .back-home a {
+      background:#007bff;color:white;padding:8px 18px;text-decoration:none;border-radius:8px;font-weight:bold;
+      display:inline-block;
+    }
+    .back-home a:hover {background:#0056b3;}
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="back-home">
+      <a href="index.html">🏠 الرئيسية</a>
+    </div>
     <h2>إضافة مسابقة جديدة</h2>
     <form id="addForm">
       <label>اسم المسابقة:</label>
