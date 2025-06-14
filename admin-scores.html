@@ -125,7 +125,7 @@
   </div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     const firebaseConfig = {
       apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
       authDomain: "kenz-camp.firebaseapp.com",
@@ -173,14 +173,23 @@
         const d = docSnap.data();
         allParticipants[d.participantNumber] = d;
       });
+
+      // جلب الدرجات القديمة لعرضها تلقائيا في الفورم
+      let oldScores = {};
+      const scoreDoc = await getDoc(doc(db, "contestScores", contestId));
+      if (scoreDoc.exists() && scoreDoc.data().scores) {
+        oldScores = scoreDoc.data().scores;
+      }
+
       let html = "";
       contest.participants.forEach(partNum => {
         const p = allParticipants[partNum];
         if (!p) return;
+        const val = oldScores[partNum] !== undefined ? oldScores[partNum] : "";
         html += `
           <label style="margin:10px 0 0; display:block;">
             ${p.name} (${p.participantNumber})
-            <input type="number" min="0" max="${contest.requiredPoints}" name="score_${partNum}" placeholder="النقاط" style="width:80px;margin-right:10px;">
+            <input type="number" min="0" max="${contest.requiredPoints}" name="score_${partNum}" placeholder="النقاط" style="width:80px;margin-right:10px;" value="${val}">
           </label>
         `;
       });
@@ -188,7 +197,7 @@
       form.style.display = "block";
     });
 
-    // حفظ النقاط
+    // حفظ النقاط مع الدمج الصحيح مع الدرجات القديمة
     document.getElementById('scoresForm').onsubmit = async function(e) {
       e.preventDefault();
       document.getElementById("msg").textContent = "";
@@ -207,8 +216,16 @@
           data[partNum] = val;
       });
       try {
-        // حفظ النقاط في Collection: contestScores > contestId > scores
-        await setDoc(doc(db, "contestScores", contestId), { scores: data }, { merge: true });
+        // جلب الدرجات القديمة أولاً
+        const scoreDocRef = doc(db, "contestScores", contestId);
+        const scoreDocSnap = await getDoc(scoreDocRef);
+        let oldScores = {};
+        if (scoreDocSnap.exists() && scoreDocSnap.data().scores) {
+          oldScores = scoreDocSnap.data().scores;
+        }
+        // دمج الدرجات
+        const mergedScores = { ...oldScores, ...data };
+        await setDoc(scoreDocRef, { scores: mergedScores }, { merge: true });
         document.getElementById("msg").textContent = "تم حفظ النقاط!";
       } catch (err) {
         document.getElementById("error").textContent = "حدث خطأ أثناء الحفظ";
