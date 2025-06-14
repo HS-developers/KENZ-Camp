@@ -19,6 +19,7 @@
       padding: 12px 10px;
       background-color: #e3f2fd;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
     }
     header h1 {
       margin: 0;
@@ -29,6 +30,18 @@
       margin: 8px 0 0;
       font-size: 22px;
       color: #ff9800;
+    }
+    .logout-btn {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      background: #e53935;
+      color: white;
+      border-radius: 8px;
+      padding: 7px 18px;
+      border: none;
+      font-size: 15px;
+      cursor:pointer;
     }
     .table-container {
       flex: 1;
@@ -139,9 +152,29 @@
   </style>
 </head>
 <body>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
+      authDomain: "kenz-camp.firebaseapp.com",
+      projectId: "kenz-camp",
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+      }
+    });
+    window.adminLogout = function() {
+      signOut(auth).then(() => { window.location.href = "login.html"; });
+    }
+  </script>
   <header>
     <h1>مخيم كمبوند كنز الصيفي</h1>
     <h2>🎖️ الكل رابح 🎖️</h2>
+    <button onclick="adminLogout()" class="logout-btn">تسجيل خروج</button>
   </header>
 
   <div class="table-container">
@@ -192,18 +225,11 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
     const firebaseConfig = {
       apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
       authDomain: "kenz-camp.firebaseapp.com",
-      databaseURL: "https://kenz-camp-default-rtdb.firebaseio.com",
       projectId: "kenz-camp",
-      storageBucket: "kenz-camp.appspot.com",
-      messagingSenderId: "238149901596",
-      appId: "1:238149901596:web:7f5f18eb007dc564e0aed9",
-      measurementId: "G-E0E6SG8YE8"
     };
-
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
@@ -213,7 +239,6 @@
       const countElement = document.getElementById("participant-count");
       let count = 0;
       tableBody.innerHTML = "";
-
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         const row = `<tr>
@@ -228,7 +253,6 @@
         tableBody.innerHTML += row;
         count++;
       });
-
       countElement.textContent = `عدد المشاركين: ${count}`;
     }
 
