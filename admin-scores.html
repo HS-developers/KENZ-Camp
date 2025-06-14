@@ -2,34 +2,41 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>تسجيل نقاط المسابقات للمشاركين</title>
+  <title>تسجيل نقاط المسابقات</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
   <style>
     body { font-family: Cairo, sans-serif; background: #f4f4f4; }
-    .container { max-width: 420px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 10px #0001; padding: 30px 18px; }
+    .container { max-width: 480px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 10px #0001; padding: 30px 18px; }
     h2 { text-align:center; }
     label { display: block; margin-top: 12px; font-weight: bold;}
-    input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-top: 5px; }
-    button { width: 100%; padding: 12px; margin-top: 18px; background: #004aad; color: white; border: none; border-radius: 8px; font-size: 17px; }
+    select, input[type="number"] { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-top: 5px;}
+    button { padding: 8px 16px; margin-top: 10px; border-radius:8px; border:none; background:#004aad; color:white; font-weight:bold; cursor:pointer;}
     .msg { text-align: center; margin-top: 12px; color: green; }
     .error { color: red; text-align: center; margin-top: 10px;}
+    table {width:100%; border-collapse:collapse; margin-top:30px;}
+    th,td {border:1px solid #ddd;padding:8px;text-align:center;}
+    th {background:#e3f2fd;}
+    .back-home {text-align:right; margin: 15px 0;}
+    .back-home a {
+      background:#007bff;color:white;padding:8px 18px;text-decoration:none;border-radius:8px;font-weight:bold;
+      display:inline-block;
+    }
+    .back-home a:hover {background:#0056b3;}
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>تسجيل نقاط المشاركين في المسابقات</h2>
-    <form id="scoreForm">
-      <label>رقم المشارك أو اسمه الثلاثي:</label>
-      <input type="text" id="participant" required />
+    <div class="back-home">
+      <a href="index.html">🏠 الرئيسية</a>
+    </div>
+    <h2>تسجيل نقاط المسابقة</h2>
+    <label>اختر المسابقة:</label>
+    <select id="contestSelect" required>
+      <option value="">-- اختر --</option>
+    </select>
 
-      <label>المسابقة:</label>
-      <select id="contest" required>
-        <option value="">اختر المسابقة</option>
-      </select>
-
-      <label>النقاط:</label>
-      <input type="number" id="points" min="0" required />
-
+    <form id="scoresForm" style="display:none;">
+      <div id="participantsScores"></div>
       <button type="submit">حفظ النقاط</button>
       <div class="msg" id="msg"></div>
       <div class="error" id="error"></div>
@@ -37,7 +44,7 @@
   </div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     const firebaseConfig = {
       apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
@@ -48,84 +55,90 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // حماية الصفحة للمشرفين فقط
     onAuthStateChanged(auth, (user) => {
       if (!user) window.location.href = "login.html";
     });
 
-    // تحميل المسابقات ديناميكياً
+    // تحميل المسابقات
+    let contestsMap = {};
     async function loadContests() {
-      const sel = document.getElementById("contest");
-      sel.innerHTML = `<option value="">اختر المسابقة</option>`;
       const q = await getDocs(collection(db, "contests"));
+      const select = document.getElementById("contestSelect");
       q.forEach(docSnap => {
         const d = docSnap.data();
-        sel.innerHTML += `<option value="${docSnap.id}" data-max="${d.requiredPoints}">${d.name} (من ${d.startDate} إلى ${d.endDate})</option>`;
+        contestsMap[docSnap.id] = d;
+        const opt = document.createElement("option");
+        opt.value = docSnap.id;
+        opt.textContent = d.name;
+        select.appendChild(opt);
       });
     }
     loadContests();
 
-    // عند اختيار مسابقة حدّد الحد الأقصى للنقاط
-    document.getElementById("contest").onchange = function() {
-      const opt = this.selectedOptions[0];
-      const max = opt && opt.dataset.max ? parseInt(opt.dataset.max) : "";
-      const pt = document.getElementById("points");
-      pt.value = "";
-      pt.max = max || "";
-      pt.setAttribute("placeholder", max ? `من 0 إلى ${max}` : "");
-    }
+    // عند اختيار مسابقة، احضر المشاركين فقط لهذه المسابقة
+    document.getElementById("contestSelect").addEventListener("change", async function() {
+      const contestId = this.value;
+      const form = document.getElementById("scoresForm");
+      const scoresDiv = document.getElementById("participantsScores");
+      scoresDiv.innerHTML = "";
+      if (!contestId) {
+        form.style.display = "none";
+        return;
+      }
+      const contest = contestsMap[contestId];
+      if (!contest || !contest.participants || !contest.participants.length) {
+        scoresDiv.innerHTML = "<div style='color:red'>لا يوجد مشاركون في هذه المسابقة.</div>";
+        form.style.display = "block";
+        return;
+      }
+      // جلب بيانات المشاركين
+      const allParticipants = {};
+      const q = await getDocs(collection(db, "participants"));
+      q.forEach(docSnap => {
+        const d = docSnap.data();
+        allParticipants[d.participantNumber] = d;
+      });
+      let html = "";
+      contest.participants.forEach(partNum => {
+        const p = allParticipants[partNum];
+        if (!p) return;
+        html += `
+          <label style="margin:10px 0 0; display:block;">
+            ${p.name} (${p.participantNumber})
+            <input type="number" min="0" max="${contest.requiredPoints}" name="score_${partNum}" placeholder="النقاط" style="width:80px;margin-right:10px;">
+          </label>
+        `;
+      });
+      scoresDiv.innerHTML = html;
+      form.style.display = "block";
+    });
 
-    document.getElementById('scoreForm').onsubmit = async function(e) {
+    // حفظ النقاط
+    document.getElementById('scoresForm').onsubmit = async function(e) {
       e.preventDefault();
       document.getElementById("msg").textContent = "";
       document.getElementById("error").textContent = "";
-      const participantInput = document.getElementById("participant").value.trim();
-      const contestId = document.getElementById("contest").value;
-      const points = parseInt(document.getElementById("points").value);
-      if (!participantInput || !contestId || isNaN(points)) {
-        document.getElementById("error").textContent = "يرجى تعبئة جميع البيانات بشكل صحيح";
+      const contestId = document.getElementById("contestSelect").value;
+      const contest = contestsMap[contestId];
+      if (!contestId || !contest) {
+        document.getElementById("error").textContent = "يجب اختيار مسابقة.";
         return;
       }
-      // جلب بيانات المسابقة
-      const contestDoc = await getDoc(doc(db, "contests", contestId));
-      if (!contestDoc.exists()) {
-        document.getElementById("error").textContent = "المسابقة غير موجودة";
-        return;
-      }
-      const contest = contestDoc.data();
-      if (points < 0 || points > contest.requiredPoints) {
-        document.getElementById("error").textContent = `النقاط يجب أن تكون من 0 إلى ${contest.requiredPoints}`;
-        return;
-      }
-      // البحث عن المشارك
-      let q = query(collection(db, "participants"), where("participantNumber", "==", participantInput));
-      let querySnapshot = await getDocs(q);
-      let participantDoc;
-      if (querySnapshot.empty) {
-        q = query(collection(db, "participants"), where("name", "==", participantInput));
-        querySnapshot = await getDocs(q);
-      }
-      if (!querySnapshot.empty) participantDoc = querySnapshot.docs[0].data();
-      if (!participantDoc) {
-        document.getElementById("error").textContent = "لم يتم العثور على هذا المشارك!";
-        return;
-      }
-      const date = new Date().toISOString().slice(0,10);
+      const points = contest.requiredPoints;
+      const data = {};
+      contest.participants.forEach(partNum => {
+        const val = parseInt(this[`score_${partNum}`]?.value || "0");
+        if (!isNaN(val) && val >= 0 && val <= points)
+          data[partNum] = val;
+      });
       try {
-        await addDoc(collection(db, "scores"), {
-          participantNumber: participantDoc.participantNumber,
-          participantName: participantDoc.name,
-          contestId,
-          contestName: contest.name,
-          points,
-          date
-        });
-        document.getElementById("msg").textContent = "تم تسجيل النقاط بنجاح ✔️";
-        document.getElementById("scoreForm").reset();
+        // حفظ النقاط في Collection: contestScores > contestId > scores
+        await setDoc(doc(db, "contestScores", contestId), { scores: data }, { merge: true });
+        document.getElementById("msg").textContent = "تم حفظ النقاط!";
       } catch (err) {
         document.getElementById("error").textContent = "حدث خطأ أثناء الحفظ";
       }
-    }
+    };
   </script>
 </body>
 </html>
