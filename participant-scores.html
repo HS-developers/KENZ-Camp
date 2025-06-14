@@ -73,8 +73,7 @@
         contests.push({
           id: docSnap.id,
           name: docSnap.data().name || docSnap.id,
-          date: docSnap.data().date || "", // تأكد أن لديك هذا الحقل في الداتا
-          totalPoints: docSnap.data().totalPoints || 0 // تأكد أن لديك هذا الحقل في الداتا
+          date: docSnap.data().date || "" // التاريخ إذا كان موجودا
         });
       });
       return contests;
@@ -106,7 +105,6 @@
       msgBox.style.display = "none";
       scoresTableWrap.innerHTML = "<div style='text-align:center;margin:25px 0;font-size:16px;'>جارٍ التحميل...</div>";
 
-      // تحميل البيانات
       const contests = await getContests();
       const participants = await getParticipants();
 
@@ -148,11 +146,11 @@
           contestRows.push({
             name: c.name,
             date: c.date,
-            totalPoints: c.totalPoints,
+            totalPoints: 10, // ثابتة
             userPoints
           });
           userTotal += userPoints;
-          totalPossible += c.totalPoints || 0;
+          totalPossible += 10;
         }
       });
 
@@ -176,7 +174,7 @@
         tbody += `<tr>
           <td>${row.name}</td>
           <td>${row.date}</td>
-          <td>${row.totalPoints}</td>
+          <td>10</td>
           <td>${row.userPoints}</td>
         </tr>`;
       });
