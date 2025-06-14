@@ -2,42 +2,54 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>استعلام النقاط</title>
+  <title>استعلام عن النقاط - مخيم كنز</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
   <style>
     body { font-family: Cairo, sans-serif; background: #f4f4f4; }
-    .container { max-width: 450px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 10px #0001; padding: 30px 18px; }
-    h2 { text-align:center; }
-    label { display: block; margin-top: 12px; font-weight: bold;}
-    input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-top: 5px;}
-    button { padding: 8px 16px; margin-top: 10px; border-radius:8px; border:none; background:#004aad; color:white; font-weight:bold; cursor:pointer;}
-    .score-table {width:100%; border-collapse:collapse; margin-top:22px;}
-    .score-table th, .score-table td {border:1px solid #ddd;padding:8px;text-align:center;}
-    .score-table th {background:#e3f2fd;}
-    .msg { text-align: center; margin-top: 12px; color: green; }
-    .error { color: red; text-align: center; margin-top: 10px;}
+    header {text-align:center;padding:14px 10px;background:#e3f2fd;box-shadow:0 1px 4px #0001;position:relative;}
+    header h1 {margin:0;font-size:28px;color:#004aad;}
+    header h2 {margin:8px 0 0;font-size:22px;color:#ff9800;}
+    .container {max-width:700px;margin:30px auto 18px;background:#fff;border-radius:12px;box-shadow:0 2px 10px #0001;padding:30px 16px;}
+    table {width:100%;border-collapse:collapse;background:#fff;}
+    th,td {padding:10px 8px;border-bottom:1px solid #ddd;text-align:center;font-size:15px;}
+    th {background:#e3f2fd;}
+    tr.total-row {background:#ffe082!important;font-weight:bold;}
+    tr:nth-child(even) {background:#f9f9f9;}
+    .search-bar {text-align:center;margin-bottom:20px;}
+    .search-bar input {padding:8px 12px;font-size:15px;}
+    .search-bar button {padding:8px 20px;font-size:15px;background:#43a047;color:#fff;border:none;border-radius:8px;cursor:pointer;}
+    .search-bar button:hover {background:#25762e;}
+    .msg {text-align:center;color:#d32f2f;font-size:16px;margin:18px 0;}
     .back-home {text-align:right; margin: 15px 0;}
     .back-home a {
       background:#007bff;color:white;padding:8px 18px;text-decoration:none;border-radius:8px;font-weight:bold;
       display:inline-block;
     }
     .back-home a:hover {background:#0056b3;}
+    footer {font-size:14px;color:#555;padding:8px 10px;text-align:center;}
   </style>
 </head>
 <body>
+  <header>
+    <h1>مخيم كمبوند كنز الصيفي</h1>
+    <h2>🔍 استعلام عن النقاط 🔍</h2>
+  </header>
   <div class="container">
     <div class="back-home">
-      <a href="index.html">🏠 الرئيسية</a>
+      <a href="index.html">🏠 العودة للرئيسية</a>
     </div>
-    <h2>استعلم عن نقاطك</h2>
-    <form id="queryForm">
-      <label>رقم المشارك:</label>
-      <input type="text" id="participantNumberInput" required placeholder="مثال: KZ-20250614-123456">
-      <button type="submit">استعلام</button>
-    </form>
-    <div id="scoresResult"></div>
+    <div class="search-bar">
+      <input type="text" id="partNumInput" placeholder="أدخل رقم المشارك أو الاسم..." />
+      <button id="searchBtn">بحث</button>
+    </div>
+    <div id="scoresTableWrap"></div>
+    <div class="msg" id="msgBox" style="display:none"></div>
   </div>
+  <footer>
+    All Right Reserved © 2025 Genius Tech Co
+  </footer>
   <script type="module">
+    // Firebase imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     const firebaseConfig = {
@@ -48,79 +60,152 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    document.getElementById('queryForm').onsubmit = async function(e) {
-      e.preventDefault();
-      const partNum = document.getElementById("participantNumberInput").value.trim();
-      const scoresDiv = document.getElementById("scoresResult");
-      scoresDiv.innerHTML = "جارٍ التحميل...";
+    const searchBtn = document.getElementById("searchBtn");
+    const partNumInput = document.getElementById("partNumInput");
+    const scoresTableWrap = document.getElementById("scoresTableWrap");
+    const msgBox = document.getElementById("msgBox");
 
-      // جلب اسم المشارك والتأكد من وجوده
-      let pName = "";
-      let foundParticipant = false;
-      const pSnap = await getDocs(collection(db, "participants"));
-      pSnap.forEach(docSnap => {
-        const d = docSnap.data();
-        if (d.participantNumber === partNum) {
-          pName = d.name;
-          foundParticipant = true;
-        }
+    // جلب بيانات المسابقات
+    async function getContests() {
+      const contestsSnap = await getDocs(collection(db, "contests"));
+      let contests = [];
+      contestsSnap.forEach(docSnap => {
+        contests.push({
+          id: docSnap.id,
+          name: docSnap.data().name || docSnap.id,
+          date: docSnap.data().date || "", // تأكد أن لديك هذا الحقل في الداتا
+          totalPoints: docSnap.data().totalPoints || 0 // تأكد أن لديك هذا الحقل في الداتا
+        });
       });
-      if (!foundParticipant) {
-        scoresDiv.innerHTML = `<div class="error">رقم المشارك غير صحيح أو غير مسجل.</div>`;
+      return contests;
+    }
+
+    // جلب بيانات المشاركين
+    async function getParticipants() {
+      const snap = await getDocs(collection(db, "participants"));
+      let participants = [];
+      snap.forEach(docSnap => {
+        let d = docSnap.data();
+        participants.push(d);
+      });
+      return participants;
+    }
+
+    // جلب نتائج كل مسابقة
+    async function getScoresForAllContests(contests) {
+      let scoresPerContest = {};
+      for (const c of contests) {
+        const scoreSnap = await getDoc(doc(db, "contestScores", c.id));
+        scoresPerContest[c.id] = (scoreSnap.exists() && scoreSnap.data().scores) ? scoreSnap.data().scores : {};
+      }
+      return scoresPerContest;
+    }
+
+    // بناء جدول المسابقات للمشارك
+    async function buildParticipantScoresTable(query) {
+      msgBox.style.display = "none";
+      scoresTableWrap.innerHTML = "<div style='text-align:center;margin:25px 0;font-size:16px;'>جارٍ التحميل...</div>";
+
+      // تحميل البيانات
+      const contests = await getContests();
+      const participants = await getParticipants();
+
+      if (!contests.length) {
+        scoresTableWrap.innerHTML = "";
+        msgBox.textContent = "لا يوجد مسابقات بعد.";
+        msgBox.style.display = "block";
+        return;
+      }
+      if (!participants.length) {
+        scoresTableWrap.innerHTML = "";
+        msgBox.textContent = "لا يوجد مشاركين بعد.";
+        msgBox.style.display = "block";
         return;
       }
 
-      // جلب كل المسابقات
-      const contestsQ = await getDocs(collection(db, "contests"));
-      const contestArr = [];
-      contestsQ.forEach(docSnap => {
-        const d = docSnap.data();
-        // تأكد أن participants مصفوفة فعلاً
-        if (Array.isArray(d.participants) && d.participants.includes(partNum)) {
-          contestArr.push({ id: docSnap.id, ...d });
-        }
-      });
-
-      if (!contestArr.length) {
-        scoresDiv.innerHTML = `<div class="msg">لا توجد مسابقات أنت مشترك بها حتى الآن.</div>`;
+      // فلترة المشارك
+      let participant = participants.find(p =>
+        (p.participantNumber && p.participantNumber.toString().includes(query)) ||
+        (p.name && p.name.includes(query))
+      );
+      if (!participant) {
+        scoresTableWrap.innerHTML = "";
+        msgBox.textContent = "لم يتم العثور على مشارك.";
+        msgBox.style.display = "block";
         return;
       }
 
-      // جلب النقاط لكل مسابقة بدقة
-      let html = `<div style="margin-bottom:8px;text-align:center;font-weight:bold;">${pName ? "الاسم: " + pName : ""}</div>
-      <table class="score-table">
-        <thead>
-          <tr>
-            <th>المسابقة</th>
-            <th>الفترة</th>
-            <th>النقاط الكلية</th>
-            <th>نقاطك</th>
-          </tr>
-        </thead>
-        <tbody>
-      `;
-      for (const c of contestArr) {
-        let score = "-";
-        try {
-          const scoreDoc = await getDoc(doc(db, "contestScores", c.id));
-          if (scoreDoc.exists() && scoreDoc.data().scores && scoreDoc.data().scores[partNum] !== undefined) {
-            score = scoreDoc.data().scores[partNum];
-          } else {
-            score = "لم تسجل نقاط بعد";
-          }
-        } catch (e) {
-          score = "-";
+      // جلب نقاطه في كل المسابقات
+      const scoresPerContest = await getScoresForAllContests(contests);
+
+      // بناء صفوف المسابقات التي شارك فيها فقط
+      let contestRows = [];
+      let userTotal = 0;
+      let totalPossible = 0;
+      contests.forEach(c => {
+        let userPoints = scoresPerContest[c.id][participant.participantNumber];
+        if (typeof userPoints === "number") {
+          contestRows.push({
+            name: c.name,
+            date: c.date,
+            totalPoints: c.totalPoints,
+            userPoints
+          });
+          userTotal += userPoints;
+          totalPossible += c.totalPoints || 0;
         }
-        html += `<tr>
-          <td>${c.name}</td>
-          <td>${c.startDate} - ${c.endDate}</td>
-          <td>${c.requiredPoints}</td>
-          <td>${score}</td>
+      });
+
+      if (!contestRows.length) {
+        scoresTableWrap.innerHTML = `<div style='text-align:center;margin:30px 0;font-size:16px;'>${participant.name}<br>لم يشارك في أي مسابقة بعد.</div>`;
+        return;
+      }
+
+      // بناء الجدول
+      let thead = `<thead>
+        <tr>
+          <th>اسم المسابقة</th>
+          <th>التاريخ</th>
+          <th>النقاط الكلية للمسابقة</th>
+          <th>النقاط التي حصل عليها</th>
+        </tr>
+      </thead>`;
+
+      let tbody = "";
+      contestRows.forEach(row => {
+        tbody += `<tr>
+          <td>${row.name}</td>
+          <td>${row.date}</td>
+          <td>${row.totalPoints}</td>
+          <td>${row.userPoints}</td>
         </tr>`;
-      }
-      html += "</tbody></table>";
-      scoresDiv.innerHTML = html;
+      });
+
+      // صف الإجمالي في آخر الجدول
+      tbody += `<tr class="total-row">
+        <td colspan="2">الإجمالي</td>
+        <td><b>${totalPossible}</b></td>
+        <td><b>${userTotal}</b></td>
+      </tr>`;
+
+      scoresTableWrap.innerHTML = `
+        <div style="margin-bottom:10px;text-align:center;font-size:17px;">${participant.name} (${participant.participantNumber})</div>
+        <div style="overflow-x:auto">
+          <table>${thead}<tbody>${tbody}</tbody></table>
+        </div>
+      `;
+    }
+
+    // البحث
+    searchBtn.onclick = () => {
+      buildParticipantScoresTable(partNumInput.value.trim());
     };
+    partNumInput.onkeydown = (e) => {
+      if(e.key === "Enter") buildParticipantScoresTable(partNumInput.value.trim());
+    };
+
+    // عرض فارغ عند فتح الصفحة
+    scoresTableWrap.innerHTML = "";
   </script>
 </body>
 </html>
