@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>عرض المشاركين - مخيم كنز</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      font-family: "Cairo", sans-serif;
+      background-color: #f4f4f4;
+    }
+    header, footer {
+      text-align: center;
+      padding: 12px 10px;
+      background-color: #e3f2fd;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #004aad;
+    }
+    header h2 {
+      margin: 8px 0 0;
+      font-size: 22px;
+      color: #ff9800;
+    }
+    .table-container {
+      flex: 1;
+      padding: 20px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 8px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+    .search-bar {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    #search-input {
+      padding: 10px;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-family: Cairo, sans-serif;
+    }
+    .summary {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .summary p {
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    .summary button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      font-size: 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .summary button:hover {
+      background-color: #218838;
+    }
+    .back-button {
+      text-align: center;
+      margin: 30px auto 20px;
+    }
+    .back-button a {
+      background-color: #004aad;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 16px;
+      display: inline-block;
+    }
+    .back-button a:hover {
+      background-color: #00327e;
+    }
+    .popup {
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      display: none;
+    }
+    .popup-content {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 300px;
+      width: 90%;
+      text-align: center;
+    }
+    .id-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .id-btn:hover {
+      background-color: #0056b3;
+    }
+    footer {
+      font-size: 14px;
+      color: #555;
+      padding: 6px 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>مخيم كمبوند كنز الصيفي</h1>
+    <h2>🎖️ الكل رابح 🎖️</h2>
+  </header>
+
+  <div class="table-container">
+    <h2 style="text-align:center">قائمة المشاركين</h2>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="🔍 ابحث بالاسم أو رقم المشارك">
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>رقم المشارك</th>
+          <th>الاسم</th>
+          <th>العمر</th>
+          <th>رقم الوحدة</th>
+          <th>رقم التواصل</th>
+          <th>الفئة العمرية</th>
+          <th>بطاقة</th>
+        </tr>
+      </thead>
+      <tbody id="participants-body">
+        <tr><td colspan="7">جارٍ التحميل...</td></tr>
+      </tbody>
+    </table>
+    <div class="summary">
+      <p id="participant-count">عدد المشاركين: جاري العد...</p>
+      <button onclick="window.print()">🖨️ طباعة القائمة</button>
+    </div>
+    <div class="back-button">
+      <a href="index.html">⬅ العودة إلى صفحة التسجيل</a>
+    </div>
+  </div>
+
+  <div id="card-popup" class="popup">
+    <div class="popup-content" id="card-content">
+      <h2>🎫 بطاقة المشارك</h2>
+      <p id="card-name"></p>
+      <p id="card-age"></p>
+      <p id="card-id" style="font-weight:bold; color:#e53935;"></p>
+      <button onclick="printCard()">💾 حفظ كـ PDF</button>
+      <button onclick="closeCard()">❌ إغلاق</button>
+    </div>
+  </div>
+
+  <footer>
+    All Right Reserved © 2025 Genius Tech Co
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
+      authDomain: "kenz-camp.firebaseapp.com",
+      databaseURL: "https://kenz-camp-default-rtdb.firebaseio.com",
+      projectId: "kenz-camp",
+      storageBucket: "kenz-camp.appspot.com",
+      messagingSenderId: "238149901596",
+      appId: "1:238149901596:web:7f5f18eb007dc564e0aed9",
+      measurementId: "G-E0E6SG8YE8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadParticipants() {
+      const querySnapshot = await getDocs(collection(db, "participants"));
+      const tableBody = document.getElementById("participants-body");
+      const countElement = document.getElementById("participant-count");
+      let count = 0;
+      tableBody.innerHTML = "";
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const row = `<tr>
+          <td>${data.participantNumber || "—"}</td>
+          <td>${data.name}</td>
+          <td>${data.age}</td>
+          <td>${data.guardian}</td>
+          <td>${data.phone}</td>
+          <td>${data.group}</td>
+          <td><button class="id-btn" onclick='showCard(${JSON.stringify(data)})'>📄 بطاقة</button></td>
+        </tr>`;
+        tableBody.innerHTML += row;
+        count++;
+      });
+
+      countElement.textContent = `عدد المشاركين: ${count}`;
+    }
+
+    function filterTable() {
+      const input = document.getElementById("search-input").value.toLowerCase();
+      const rows = document.querySelectorAll("#participants-body tr");
+      rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        const text = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(" ");
+        row.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadParticipants();
+      document.getElementById("search-input").addEventListener("input", filterTable);
+    });
+
+    window.showCard = function(data) {
+      document.getElementById("card-name").textContent = `الاسم: ${data.name}`;
+      document.getElementById("card-age").textContent = `العمر: ${data.age}`;
+      document.getElementById("card-id").textContent = `رقم المشارك: ${data.participantNumber || "—"}`;
+      document.getElementById("card-popup").style.display = "flex";
+    };
+
+    window.closeCard = function() {
+      document.getElementById("card-popup").style.display = "none";
+    };
+
+    window.printCard = function() {
+      const content = document.getElementById("card-content").innerHTML;
+      const win = window.open("", "", "width=400,height=600");
+      win.document.write(`
+        <html><head><title>بطاقة المشارك</title>
+        <style>body{font-family:Cairo,sans-serif;text-align:center;padding:20px}</style>
+        </head><body>${content}</body></html>
+      `);
+      win.document.close();
+      win.print();
+    };
+  </script>
+</body>
+</html>
