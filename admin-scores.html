@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>تسجيل نقاط المسابقات للمشاركين</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: Cairo, sans-serif; background: #f4f4f4; }
+    .container { max-width: 420px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 10px #0001; padding: 30px 18px; }
+    h2 { text-align:center; }
+    label { display: block; margin-top: 12px; font-weight: bold;}
+    input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-top: 5px; }
+    button { width: 100%; padding: 12px; margin-top: 18px; background: #004aad; color: white; border: none; border-radius: 8px; font-size: 17px; }
+    .msg { text-align: center; margin-top: 12px; color: green; }
+    .error { color: red; text-align: center; margin-top: 10px;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>تسجيل نقاط المشاركين في المسابقات</h2>
+    <form id="scoreForm">
+      <label>رقم المشارك أو اسمه الثلاثي:</label>
+      <input type="text" id="participant" required />
+
+      <label>المسابقة:</label>
+      <select id="contest" required>
+        <option value="">اختر المسابقة</option>
+      </select>
+
+      <label>النقاط:</label>
+      <input type="number" id="points" min="0" required />
+
+      <button type="submit">حفظ النقاط</button>
+      <div class="msg" id="msg"></div>
+      <div class="error" id="error"></div>
+    </form>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
+      authDomain: "kenz-camp.firebaseapp.com",
+      projectId: "kenz-camp",
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // حماية الصفحة للمشرفين فقط
+    onAuthStateChanged(auth, (user) => {
+      if (!user) window.location.href = "login.html";
+    });
+
+    // تحميل المسابقات ديناميكياً
+    async function loadContests() {
+      const sel = document.getElementById("contest");
+      sel.innerHTML = `<option value="">اختر المسابقة</option>`;
+      const q = await getDocs(collection(db, "contests"));
+      q.forEach(docSnap => {
+        const d = docSnap.data();
+        sel.innerHTML += `<option value="${docSnap.id}" data-max="${d.requiredPoints}">${d.name} (من ${d.startDate} إلى ${d.endDate})</option>`;
+      });
+    }
+    loadContests();
+
+    // عند اختيار مسابقة حدّد الحد الأقصى للنقاط
+    document.getElementById("contest").onchange = function() {
+      const opt = this.selectedOptions[0];
+      const max = opt && opt.dataset.max ? parseInt(opt.dataset.max) : "";
+      const pt = document.getElementById("points");
+      pt.value = "";
+      pt.max = max || "";
+      pt.setAttribute("placeholder", max ? `من 0 إلى ${max}` : "");
+    }
+
+    document.getElementById('scoreForm').onsubmit = async function(e) {
+      e.preventDefault();
+      document.getElementById("msg").textContent = "";
+      document.getElementById("error").textContent = "";
+      const participantInput = document.getElementById("participant").value.trim();
+      const contestId = document.getElementById("contest").value;
+      const points = parseInt(document.getElementById("points").value);
+      if (!participantInput || !contestId || isNaN(points)) {
+        document.getElementById("error").textContent = "يرجى تعبئة جميع البيانات بشكل صحيح";
+        return;
+      }
+      // جلب بيانات المسابقة
+      const contestDoc = await getDoc(doc(db, "contests", contestId));
+      if (!contestDoc.exists()) {
+        document.getElementById("error").textContent = "المسابقة غير موجودة";
+        return;
+      }
+      const contest = contestDoc.data();
+      if (points < 0 || points > contest.requiredPoints) {
+        document.getElementById("error").textContent = `النقاط يجب أن تكون من 0 إلى ${contest.requiredPoints}`;
+        return;
+      }
+      // البحث عن المشارك
+      let q = query(collection(db, "participants"), where("participantNumber", "==", participantInput));
+      let querySnapshot = await getDocs(q);
+      let participantDoc;
+      if (querySnapshot.empty) {
+        q = query(collection(db, "participants"), where("name", "==", participantInput));
+        querySnapshot = await getDocs(q);
+      }
+      if (!querySnapshot.empty) participantDoc = querySnapshot.docs[0].data();
+      if (!participantDoc) {
+        document.getElementById("error").textContent = "لم يتم العثور على هذا المشارك!";
+        return;
+      }
+      const date = new Date().toISOString().slice(0,10);
+      try {
+        await addDoc(collection(db, "scores"), {
+          participantNumber: participantDoc.participantNumber,
+          participantName: participantDoc.name,
+          contestId,
+          contestName: contest.name,
+          points,
+          date
+        });
+        document.getElementById("msg").textContent = "تم تسجيل النقاط بنجاح ✔️";
+        document.getElementById("scoreForm").reset();
+      } catch (err) {
+        document.getElementById("error").textContent = "حدث خطأ أثناء الحفظ";
+      }
+    }
+  </script>
+</body>
+</html>
