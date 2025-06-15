@@ -17,6 +17,8 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      /* إضافة مساحة أسفل الصفحة حتى لا يغطي الفوتر أي محتوى */
+      padding-bottom: 56px;
     }
     header {
       text-align: center;
@@ -151,7 +153,6 @@
       margin: 0 !important;
     }
     footer {
-      flex-shrink: 0;
       background: #e3f2fd;
       box-shadow: 0 -1px 4px #0001;
       border-radius: 0 0 12px 12px;
@@ -160,8 +161,11 @@
       font-family: 'Cairo', sans-serif;
       text-align: center;
       padding: 14px 10px 14px 10px;
-      position: relative;
+      position: fixed;
+      left: 0;
+      bottom: 0;
       width: 100%;
+      z-index: 100;
       margin: 0;
     }
     @media (max-width: 900px) {
@@ -191,6 +195,9 @@
       .back-home a { font-size: 13px; padding: 7px 9px; }
       .msg { font-size: 15px; margin: 18px 0 8px 0; }
       #scoresTableWrap { margin-top: 3px; margin-bottom: 7px; }
+      body {
+        padding-bottom: 56px;
+      }
     }
   </style>
 </head>
