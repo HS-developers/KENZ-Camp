@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>إدارة المسابقات</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>إدارة المسابقات - مخيم كنز</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
   <style>
     html, body {
@@ -19,6 +20,15 @@
       flex-direction: column;
       padding-bottom: 56px; /* مساحة للفوتر حتى لا يغطي المحتوى */
     }
+    header {
+      text-align: center;
+      padding: 12px 10px;
+      background-color: #e3f2fd;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    header h1 { margin: 0; font-size: 28px; color: #004aad; }
+    header h2 { margin: 8px 0 0; font-size: 22px; color: #ff9800; }
     .container { max-width: 480px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 10px #0001; padding: 30px 18px; }
     h2 { text-align:center; }
     label { display: block; margin-top: 12px; font-weight: bold;}
@@ -99,6 +109,10 @@
   </style>
 </head>
 <body>
+  <header>
+    <h1>مخيم كمبوند كنز الصيفي</h1>
+    <h2>🏆 إدارة المسابقات 🏆</h2>
+  </header>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
