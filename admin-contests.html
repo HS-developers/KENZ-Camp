@@ -5,7 +5,20 @@
   <title>إدارة المسابقات</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: Cairo, sans-serif; background: #f4f4f4; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: Cairo, sans-serif;
+      background: #f4f4f4;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 56px; /* مساحة للفوتر حتى لا يغطي المحتوى */
+    }
     .container { max-width: 480px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 10px #0001; padding: 30px 18px; }
     h2 { text-align:center; }
     label { display: block; margin-top: 12px; font-weight: bold;}
@@ -60,6 +73,29 @@
     .nav a#loginLink:hover { background-color: #e65100; }
     .nav a#logoutLink:hover { background-color: #b71c1c; }
     .nav a#honorLink:hover { background-color: #e65100; color:#fff;}
+    footer {
+      background: #e3f2fd;
+      box-shadow: 0 -1px 4px #0001;
+      border-radius: 0 0 12px 12px;
+      font-size: 14px;
+      color: #004aad;
+      font-family: 'Cairo', sans-serif;
+      text-align: center;
+      padding: 14px 10px 14px 10px;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      z-index: 100;
+      margin: 0;
+    }
+    @media (max-width: 600px) {
+      .container { max-width: 99vw; margin: 10px auto; padding: 10px 2vw; }
+      table { font-size: 13px; }
+      .back-home a { font-size: 13px; padding: 7px 9px; }
+      footer { font-size: 12px; }
+      body { padding-bottom: 56px; }
+    }
   </style>
 </head>
 <body>
@@ -109,6 +145,7 @@
     <a href="participant-scores.html" id="queryScoresLink">🔍 استعلام عن النقاط</a>
     <a href="schedule.html">📅 الجدول الزمني</a>
     <a href="login.html" id="loginLink">دخول المشرفين</a>
+    <a href="#" id="logoutLink" class="logout-btn" style="display:none" onclick="adminLogout()">تسجيل الخروج</a>
   </div>
   <div class="container">
     <div class="back-home">
@@ -152,6 +189,9 @@
       </tbody>
     </table>
   </div>
+  <footer>
+    All Right Reserved © 2025 Genius Tech Co
+  </footer>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
