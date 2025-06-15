@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -30,13 +29,44 @@
     }
     header h1 { margin: 0; font-size: 28px; color: #004aad; }
     header h2 { margin: 8px 0 0; font-size: 22px; color: #ff9800; }
-    .container { max-width: 480px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 10px #0001; padding: 30px 18px; }
+    .container {
+      max-width: 480px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px #0001;
+      padding: 30px 0 30px 0;
+    }
+    /* اجعل فورم إضافة مسابقة والأزرار يأخذان العرض بالكامل */
+    .contest-form-wrap {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0 18px;
+    }
+    form#addForm {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0;
+    }
+    .contest-form-wrap button,
+    .contest-form-wrap .msg,
+    .contest-form-wrap .error {
+      width: 100%;
+      box-sizing: border-box;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+      display: block;
+    }
+    .contest-form-wrap button {
+      padding: 12px 0;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+    .msg { text-align: center; margin-top: 12px; color: green; }
+    .error { color: red; text-align: center; margin-top: 10px;}
     h2 { text-align:center; }
     label { display: block; margin-top: 12px; font-weight: bold;}
     input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-top: 5px;}
-    button { padding: 8px 16px; margin-top: 10px; border-radius:8px; border:none; background:#004aad; color:white; font-weight:bold; cursor:pointer;}
-    .msg { text-align: center; margin-top: 12px; color: green; }
-    .error { color: red; text-align: center; margin-top: 10px;}
     table {width:100%; border-collapse:collapse; margin-top:30px;}
     th,td {border:1px solid #ddd;padding:8px;text-align:center;}
     th {background:#e3f2fd;}
@@ -100,12 +130,18 @@
       z-index: 100;
       margin: 0;
     }
+    @media (max-width: 900px) {
+      .container { max-width: 99vw; margin: 14px auto 12px auto; }
+      .contest-form-wrap { padding: 0 4vw; }
+    }
     @media (max-width: 600px) {
-      .container { max-width: 99vw; margin: 10px auto; padding: 10px 2vw; }
+      .container { max-width: 100vw; margin: 5px 0; border-radius: 0; box-shadow: none; padding: 10px 0 10px 0; }
+      .contest-form-wrap { padding: 0 2vw; }
       table { font-size: 13px; }
       .back-home a { font-size: 13px; padding: 7px 9px; }
       footer { font-size: 12px; }
       body { padding-bottom: 56px; }
+      .contest-form-wrap button { font-size: 16px; }
     }
   </style>
 </head>
@@ -167,26 +203,28 @@
       <a href="index.html">🏠 الرئيسية</a>
     </div>
     <h2>إضافة مسابقة جديدة</h2>
-    <form id="addForm">
-      <label>اسم المسابقة:</label>
-      <input type="text" id="contestName" required>
-      <label>تاريخ البداية:</label>
-      <input type="date" id="startDate" required>
-      <label>تاريخ النهاية:</label>
-      <input type="date" id="endDate" required>
-      <label>عدد النقاط الكلية:</label>
-      <input type="number" id="requiredPoints" min="1" required value="10">
+    <div class="contest-form-wrap">
+      <form id="addForm">
+        <label>اسم المسابقة:</label>
+        <input type="text" id="contestName" required>
+        <label>تاريخ البداية:</label>
+        <input type="date" id="startDate" required>
+        <label>تاريخ النهاية:</label>
+        <input type="date" id="endDate" required>
+        <label>عدد النقاط الكلية:</label>
+        <input type="number" id="requiredPoints" min="1" required value="10">
 
-      <label>المشاركون في المسابقة:</label>
-      <div class="participants-list" id="participantsList">
-        <label class="select-all-label"><input type="checkbox" id="selectAll"/> اختيار الكل</label>
-        <!-- participants will be loaded here -->
-      </div>
+        <label>المشاركون في المسابقة:</label>
+        <div class="participants-list" id="participantsList">
+          <label class="select-all-label"><input type="checkbox" id="selectAll"/> اختيار الكل</label>
+          <!-- participants will be loaded here -->
+        </div>
 
-      <button type="submit">إضافة مسابقة</button>
-      <div class="msg" id="msg"></div>
-      <div class="error" id="error"></div>
-    </form>
+        <button type="submit">إضافة مسابقة</button>
+        <div class="msg" id="msg"></div>
+        <div class="error" id="error"></div>
+      </form>
+    </div>
     <hr>
     <h3 style="text-align:center;">كل المسابقات</h3>
     <table>
