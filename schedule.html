@@ -22,6 +22,9 @@
       background: rgba(255, 255, 255, 0.8);
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      min-width: 300px;
+      max-width: 90vw;
     }
     .maintenance h1 {
       margin: 0;
@@ -41,11 +44,37 @@
       animation: spin 2s linear infinite;
     }
     @keyframes spin {
-      0% {
-        transform: rotate(0deg);
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    .back-home {
+      text-align: right;
+      margin: 18px 0 12px 0;
+    }
+    .back-home a {
+      background: #007bff;
+      color: white;
+      padding: 8px 18px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      display: inline-block;
+      font-family: inherit;
+      transition: background 0.2s;
+      font-size: 16px;
+      box-shadow: 0 1px 4px #0001;
+    }
+    .back-home a:hover {
+      background: #0056b3;
+    }
+    @media (max-width: 450px) {
+      .maintenance {
+        min-width: 0;
+        padding: 10px 2vw;
       }
-      100% {
-        transform: rotate(360deg);
+      .back-home a {
+        font-size: 13px;
+        padding: 7px 9px;
       }
     }
   </style>
@@ -56,8 +85,10 @@
     <source src="good2.mp3" type="audio/mpeg">
     المتصفح الخاص بك لا يدعم تشغيل الصوت.
   </audio>
-
   <div class="maintenance">
+    <div class="back-home">
+      <a href="index.html">🏠 العودة للرئيسية</a>
+    </div>
     <h1>🚧 الجدول قيد الاعداد 🚧</h1>
     <p> إنتظرونا قريباً...</p>
     <div class="loader"></div>
