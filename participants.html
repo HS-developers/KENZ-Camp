@@ -23,18 +23,7 @@
     }
     header h1 { margin: 0; font-size: 28px; color: #004aad; }
     header h2 { margin: 8px 0 0; font-size: 22px; color: #ff9800; }
-    .logout-btn {
-      position: absolute;
-      left: 20px;
-      top: 20px;
-      background: #e53935;
-      color: white;
-      border-radius: 8px;
-      padding: 7px 18px;
-      border: none;
-      font-size: 15px;
-      cursor:pointer;
-    }
+    /* .logout-btn { تم إلغاء هذه الكلاس لأنه لم يعد هناك زر في الهيدر } */
     .table-container {
       flex: 1;
       padding: 20px;
@@ -200,7 +189,7 @@
   <header>
     <h1>مخيم كمبوند كنز الصيفي</h1>
     <h2>🎖️ الكل رابح 🎖️</h2>
-    <button onclick="adminLogout()" class="logout-btn" id="logoutLink" style="display:none">تسجيل خروج</button>
+    <!-- الزر تم نقله للقائمة الجانبية -->
   </header>
   <div class="nav">
     <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين</a>
@@ -210,6 +199,7 @@
     <a href="participant-scores.html" id="queryScoresLink">🔍 استعلام عن النقاط</a>
     <a href="schedule.html">📅 الجدول الزمني</a>
     <a href="login.html" id="loginLink">دخول المشرفين</a>
+    <a href="#" onclick="adminLogout()" id="logoutLink" style="display:none">تسجيل خروج</a>
   </div>
   <div class="table-container">
     <h2 style="text-align:center">قائمة المشاركين</h2>
