@@ -5,7 +5,20 @@
   <title>تسجيل النقاط - مخيم كنز</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: Cairo, sans-serif; background: #f4f4f4; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: Cairo, sans-serif;
+      background: #f4f4f4;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 56px; /* مساحة للفوتر حتى لا يغطي المحتوى */
+    }
     header {text-align:center;padding:14px 10px;background:#e3f2fd;box-shadow:0 1px 4px #0001;position:relative;}
     header h1 {margin:0;font-size:28px;color:#004aad;}
     header h2 {margin:8px 0 0;font-size:22px;color:#ff9800;}
@@ -54,7 +67,40 @@
     .status-msg.err {color:#d32f2f;}
     .logout-btn {background:#d32f2f;color:white;padding:8px 18px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;margin:6px 0;}
     .logout-btn:hover {background:#b71c1c;}
-    footer {font-size:14px;color:#555;padding:8px 10px;text-align:center;}
+    footer {
+      background: #e3f2fd;
+      box-shadow: 0 -1px 4px #0001;
+      border-radius: 0 0 12px 12px;
+      font-size: 14px;
+      color: #004aad;
+      font-family: 'Cairo', sans-serif;
+      text-align: center;
+      padding: 14px 10px 14px 10px;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      z-index: 100;
+      margin: 0;
+    }
+    @media (max-width: 900px) {
+      .container { max-width: 98vw; padding: 20px 3vw; }
+    }
+    @media (max-width: 600px) {
+      header h1 { font-size: 23px; }
+      header h2 { font-size: 17px; }
+      .container {
+        padding: 11px 1vw 18px 1vw;
+        margin: 14px auto 12px auto;
+        min-height: unset;
+        box-shadow: 0 1px 6px #0001;
+      }
+      .scores-table th, .scores-table td { font-size: 13px; padding: 8px 3px; }
+      .scores-table th { font-size: 14px; }
+      .back-home a { font-size: 13px; padding: 7px 9px; }
+      .status-msg { font-size: 14px; }
+      body { padding-bottom: 56px; }
+    }
   </style>
 </head>
 <body>
