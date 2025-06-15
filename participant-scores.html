@@ -155,8 +155,6 @@
         if (typeof userPoints === "number") {
           contestRows.push({
             name: c.name,
-            date: c.date,
-            totalPoints: 10, // ثابتة
             userPoints
           });
           userTotal += userPoints;
@@ -169,11 +167,10 @@
         return;
       }
 
-      // بناء الجدول
+      // بناء الجدول بدون عمود التاريخ
       let thead = `<thead>
         <tr>
           <th>اسم المسابقة</th>
-          <th>التاريخ</th>
           <th>النقاط الكلية للمسابقة</th>
           <th>النقاط التي حصل عليها</th>
         </tr>
@@ -183,7 +180,6 @@
       contestRows.forEach(row => {
         tbody += `<tr>
           <td>${row.name}</td>
-          <td>${row.date}</td>
           <td>10</td>
           <td>${row.userPoints}</td>
         </tr>`;
@@ -191,7 +187,7 @@
 
       // صف الإجمالي في آخر الجدول
       tbody += `<tr class="total-row">
-        <td colspan="2">الإجمالي</td>
+        <td>الإجمالي</td>
         <td><b>${totalPossible}</b></td>
         <td><b>${userTotal}</b></td>
       </tr>`;
