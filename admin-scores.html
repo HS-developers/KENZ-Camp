@@ -60,8 +60,32 @@
     .scores-table input[type="text"] {width: 140px;padding:4px 2px;font-size:15px;text-align:center;}
     .btn-save {background:#43a047;color:#fff;border:none;padding:10px 25px;font-size:16px;border-radius:8px;cursor:pointer;margin:8px 0;}
     .btn-save:hover {background:#25762e;}
-    .contest-select-bar {margin:0 auto 20px auto;text-align:center;}
-    .contest-select-bar select {padding:8px 14px; border-radius:8px;}
+    .contest-select-bar {
+      margin: 0 auto 30px auto;
+      text-align: center;
+      padding: 16px 0;
+    }
+    .contest-select-bar label {
+      font-weight: bold;
+      font-size: 18px;
+      margin-left: 10px;
+    }
+    .contest-select-bar select {
+      padding: 12px 40px;
+      border-radius: 12px;
+      font-size: 19px;
+      border: 1.5px solid #bcd7fc;
+      background: #f8fbff;
+      min-width: 220px;
+      margin-right: 7px;
+      transition: border 0.2s;
+      box-shadow: 0 1px 2px #0001;
+      outline: none;
+    }
+    .contest-select-bar select:focus {
+      border: 1.5px solid #004aad;
+      background: #f2f8ff;
+    }
     .status-msg {text-align:center;margin:12px 0;font-size:16px;}
     .status-msg.ok {color:#43a047;}
     .status-msg.err {color:#d32f2f;}
@@ -85,6 +109,7 @@
     }
     @media (max-width: 900px) {
       .container { max-width: 98vw; padding: 20px 3vw; }
+      .contest-select-bar select { min-width: 140px; font-size: 16px; padding: 10px 20px; }
     }
     @media (max-width: 600px) {
       header h1 { font-size: 23px; }
@@ -99,6 +124,8 @@
       .scores-table th { font-size: 14px; }
       .back-home a { font-size: 13px; padding: 7px 9px; }
       .status-msg { font-size: 14px; }
+      .contest-select-bar label { font-size: 15px; }
+      .contest-select-bar select { min-width: 110px; font-size: 15px; padding: 9px 12px; }
       body { padding-bottom: 56px; }
     }
   </style>
@@ -123,7 +150,7 @@
       <a href="index.html">🏠 العودة للرئيسية</a>
     </div>
     <div class="contest-select-bar">
-      <label for="contestSelect" style="font-weight:bold;">اختر المسابقة:</label>
+      <label for="contestSelect">اختر المسابقة:</label>
       <select id="contestSelect"><option value="">-- اختر --</option></select>
     </div>
     <div id="scoresArea"></div>
