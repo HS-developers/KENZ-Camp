@@ -242,10 +242,12 @@
       const contestsSnap = await getDocs(collection(db, "contests"));
       let contests = [];
       contestsSnap.forEach(docSnap => {
+        const data = docSnap.data();
         contests.push({
           id: docSnap.id,
-          name: docSnap.data().name || docSnap.id,
-          date: docSnap.data().date || "" // التاريخ إذا كان موجودا
+          name: data.name || docSnap.id,
+          startDate: data.startDate || "",
+          endDate: data.endDate || "",
         });
       });
       return contests;
@@ -317,6 +319,8 @@
         if (typeof userPoints === "number") {
           contestRows.push({
             name: c.name,
+            startDate: c.startDate,
+            endDate: c.endDate,
             userPoints
           });
           userTotal += userPoints;
@@ -329,10 +333,12 @@
         return;
       }
 
-      // بناء الجدول بدون عمود التاريخ
+      // بناء الجدول مع عمود تاريخ البداية والنهاية بعد اسم المسابقة
       let thead = `<thead>
         <tr>
           <th>اسم المسابقة</th>
+          <th>تاريخ البداية</th>
+          <th>تاريخ النهاية</th>
           <th>النقاط الكلية للمسابقة</th>
           <th>النقاط التي حصل عليها</th>
         </tr>
@@ -342,6 +348,8 @@
       contestRows.forEach(row => {
         tbody += `<tr>
           <td>${row.name}</td>
+          <td>${row.startDate}</td>
+          <td>${row.endDate}</td>
           <td>10</td>
           <td>${row.userPoints}</td>
         </tr>`;
@@ -350,6 +358,7 @@
       // صف الإجمالي في آخر الجدول
       tbody += `<tr class="total-row">
         <td>الإجمالي</td>
+        <td colspan="2"></td>
         <td><b>${totalPossible}</b></td>
         <td><b>${userTotal}</b></td>
       </tr>`;
