@@ -57,14 +57,26 @@
       display:inline-block;
     }
     .back-home a:hover {background:#0056b3;}
+
     .medal {font-size:22px;}
     .group {font-size:15px;color:#1e88e5;}
     .participant-number {font-weight:bold;color:#e53935;}
-    .honor-btn-bar {text-align:center; margin:20px 0;}
+    /* تعديل زر عرض لوحة الشرف ليأخذ مساحة أكبر ووسط الصفحة */
+    .honor-btn-bar {
+      text-align: center;
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+    }
     .honor-btn-bar button {
-      background:#ff9800; color:#004aad; font-weight:bold; font-size:17px;
-      border:none; border-radius:8px; padding:12px 38px; cursor:pointer;
+      background:#ff9800; color:#004aad; font-weight:bold; font-size:20px;
+      border:none; border-radius:12px; padding:18px 70px; cursor:pointer;
       transition:background 0.2s;
+      box-shadow: 0 2px 8px #0002;
+      margin: 0 auto;
+      display: block;
+      min-width: 300px;
+      max-width: 90vw;
     }
     .honor-btn-bar button:hover { background:#e65100; color:#fff; }
     #honorTableWrap {margin-top:20px;}
@@ -89,6 +101,12 @@
       .container { max-width: 99vw; margin: 10px auto; padding: 10px 2vw; }
       table { font-size: 13px; }
       .back-home a { font-size: 13px; padding: 7px 9px; }
+      .honor-btn-bar button {
+        font-size: 16px;
+        padding: 13px 0;
+        min-width: 90vw;
+        border-radius: 10px;
+      }
       footer { font-size: 12px; }
       body { padding-bottom: 56px; }
     }
