@@ -38,14 +38,14 @@
       font-weight: 700;
     }
     .container {
-      flex: 1 0 auto;
+      flex: 0 0 auto;
       max-width: 750px;
       margin: 34px auto 18px auto;
       background: #fff;
       border-radius: 18px;
       box-shadow: 0 2px 16px #0002;
       padding: 36px 20px 32px 20px;
-      min-height: 340px;
+      min-height: unset;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -171,12 +171,26 @@
     @media (max-width: 600px) {
       header h1 { font-size: 23px; }
       header h2 { font-size: 17px; }
-      .container { padding: 11px 1vw 20px 1vw; }
-      .search-bar input { font-size: 18px; }
+      .container {
+        padding: 11px 1vw 18px 1vw;
+        margin: 14px auto 12px auto;
+        min-height: unset;
+        box-shadow: 0 1px 6px #0001;
+      }
+      .search-bar input {
+        font-size: 18px;
+        padding: 10px 8px;
+        width: 98%;
+        max-width: 98vw;
+      }
+      .search-bar {
+        margin-bottom: 16px;
+      }
       th, td { font-size: 13px; padding: 10px 4px; }
       th { font-size: 14px; }
       .back-home a { font-size: 13px; padding: 7px 9px; }
-      footer { font-size: 12px; }
+      .msg { font-size: 15px; margin: 18px 0 8px 0; }
+      #scoresTableWrap { margin-top: 3px; margin-bottom: 7px; }
     }
   </style>
 </head>
