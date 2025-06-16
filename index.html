@@ -6,13 +6,24 @@
   <title>تسجيل المشاركين - مخيم كنز</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
   <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Cairo', sans-serif;
       margin: 0;
       background-color: #f4f4f4;
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
     }
 
-    header, footer {
+    header {
       text-align: center;
       padding: 20px 10px;
       background-color: #e3f2fd;
@@ -37,6 +48,7 @@
       align-items: center;
       gap: 20px;
       padding: 20px;
+      flex: 1 0 auto;
     }
 
     .card {
@@ -160,10 +172,35 @@
     }
 
     footer {
+      background-color: #e3f2fd;
       font-size: 14px;
       color: #555;
-      padding: 6px 10px;
-      position: relative;
+      padding: 12px 10px 10px 10px;
+      text-align: center;
+      box-shadow: 0 -2px 4px rgba(0,0,0,0.08);
+      border-radius: 0 0 12px 12px;
+      width: 100%;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+    }
+
+    @media (max-width: 900px) {
+      .container { max-width: 98vw; padding: 20px 3vw; }
+    }
+    @media (max-width: 600px) {
+      header h1 { font-size: 23px; }
+      header h2 { font-size: 17px; }
+      .container {
+        padding: 11px 1vw 18px 1vw;
+        margin: 14px auto 12px auto;
+      }
+      .card {
+        padding: 10px;
+      }
+      .nav a { font-size: 13px; padding: 7px 9px; }
+      footer { font-size: 12px; padding: 9px 5px 8px 5px; }
     }
   </style>
 </head>
