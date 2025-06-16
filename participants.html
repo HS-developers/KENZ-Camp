@@ -43,9 +43,9 @@
       overflow: hidden;
     }
     .kenz-logo img {
-      width: 95px;
-      height: 95px;
-      object-fit: contain;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       border-radius: 50%;
       display: block;
     }
@@ -65,16 +65,19 @@
       text-shadow: 0 1px 4px #1976d299;
       letter-spacing: 1px;
     }
-    .nav {
+
+    /* زرار NAV */
+    .nav-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, auto);
       gap: 18px;
       align-items: stretch;
       width: 100%;
-      max-width: 540px;
+      max-width: 700px;
       margin: 24px auto 0 auto;
     }
-    .nav a {
+    .nav-grid a {
       background: linear-gradient(90deg,#1976d2 55%, #43a047 100%);
       color: #fff;
       padding: 14px 0;
@@ -91,7 +94,7 @@
       display: block;
       position: relative;
     }
-    .nav a::before {
+    .nav-grid a::before {
       content: "";
       position: absolute;
       left: 14px;
@@ -104,32 +107,28 @@
       z-index: 0;
       transition: opacity 0.2s;
     }
-    .nav a:hover, .nav a:focus {
+    .nav-grid a:hover, .nav-grid a:focus {
       background: linear-gradient(90deg,#43a047 40%, #1976d2 100%);
       color: #fffde7;
       box-shadow: 0 2px 20px #ffd54f88;
       transform: scale(1.03) translateY(-2px);
       text-shadow: 0 2px 12px #fff5;
     }
-    .nav a#adminLink { background: linear-gradient(90deg,#8e24aa 70%, #1976d2 100%);}
-    .nav a#contestsLink { background: linear-gradient(90deg,#1e88e5 60%, #ffd54f 100%); color: #004aad; font-weight: 900;}
-    .nav a#scoresLink { background: linear-gradient(90deg,#43a047 70%, #ffd54f 100%); color: #fff;}
-    .nav a#honorLink { background: linear-gradient(90deg,#ff9800 65%, #ffd54f 100%); color: #004aad; font-weight: 900;}
-    .nav a#loginLink { background: linear-gradient(90deg,#ffd54f 60%, #ff9800 100%); color: #004aad; font-weight: 900;}
-    .nav a#logoutLink { background: linear-gradient(90deg,#d32f2f 70%, #ffd54f 100%); color: #fff;}
-    .nav a#adminLink:hover { background: linear-gradient(90deg,#5e1972 80%, #43a047 100%);}
-    .nav a#contestsLink:hover { background: linear-gradient(90deg,#ffd54f 75%, #1976d2 100%); color: #004aad;}
-    .nav a#scoresLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #43a047 100%);}
-    .nav a#honorLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #ff9800 100%); color: #d84315;}
-    .nav a#loginLink:hover { background: linear-gradient(90deg,#ff9800 70%, #ffd54f 100%);}
-    .nav a#logoutLink:hover { background: linear-gradient(90deg,#ffd54f 80%, #d32f2f 100%); color: #d32f2f;}
-    .nav {
-      justify-items: stretch;
-    }
-    .nav > a {
-      min-width: 0;
-    }
-    .nav .spacer {
+    /* تخصيص الازرار */
+    .nav-grid a#adminLink { background: linear-gradient(90deg,#8e24aa 70%, #1976d2 100%);}
+    .nav-grid a#contestsLink { background: linear-gradient(90deg,#1e88e5 60%, #ffd54f 100%); color: #004aad; font-weight: 900;}
+    .nav-grid a#scoresLink { background: linear-gradient(90deg,#43a047 70%, #ffd54f 100%); color: #fff;}
+    .nav-grid a#honorLink { background: linear-gradient(90deg,#ff9800 65%, #ffd54f 100%); color: #004aad; font-weight: 900;}
+    .nav-grid a#loginLink { background: linear-gradient(90deg,#ffd54f 60%, #ff9800 100%); color: #004aad; font-weight: 900;}
+    .nav-grid a#logoutLink { background: linear-gradient(90deg,#d32f2f 70%, #ffd54f 100%); color: #fff;}
+    /* توزيع 7 زرار: 4 في الأول 3 في الثاني */
+    .nav-grid a:nth-child(5) { grid-column: 1 / 2; grid-row: 2; }
+    .nav-grid a:nth-child(6) { grid-column: 2 / 3; grid-row: 2; }
+    .nav-grid a:nth-child(7) { grid-column: 3 / 4; grid-row: 2; }
+    /* اخفاء آخر خلية فارغة بالسطر الثاني */
+    .nav-grid .spacer {
+      grid-column: 4 / 5;
+      grid-row: 2;
       pointer-events: none;
       background: transparent;
       box-shadow: none;
@@ -137,22 +136,27 @@
       visibility: hidden;
     }
     @media (max-width: 900px) {
-      .nav { max-width: 99vw; }
+      .nav-grid { max-width: 99vw; }
       .table-container { max-width: 99vw; padding: 16px 2vw; }
     }
+    @media (max-width: 850px) {
+      .nav-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, auto);}
+      .nav-grid a, .nav-grid .spacer { grid-column: auto !important; grid-row: auto !important;}
+    }
     @media (max-width: 700px) {
-      .nav { grid-template-columns: repeat(2, 1fr); gap: 11px; }
-      .table-container { padding: 7px 1vw 8px 1vw; }
+      .nav-grid { grid-template-columns: 1fr; grid-template-rows: repeat(7, auto);}
+      .nav-grid a, .nav-grid .spacer { grid-column: auto !important; grid-row: auto !important;}
       .kenz-logo { width: 70px; height: 70px;}
       .kenz-logo img { width: 65px; height: 65px;}
       header h1 { font-size: 1.3em; }
       header h2 { font-size: 1.07em; }
-      .nav a { font-size: 0.98em; padding: 10px 0;}
+      .nav-grid a { font-size: 0.98em; padding: 10px 0;}
       th, td { font-size: 0.98em; padding: 8px 4px;}
     }
     @media (max-width: 450px) {
-      .nav { grid-template-columns: 1fr; }
+      .nav-grid { grid-template-columns: 1fr; }
     }
+    /* باقي التنسيقات كما هي ... */
     .table-container {
       flex: 1 0 auto;
       padding: 24px 8vw 12px 8vw;
@@ -314,45 +318,16 @@
       z-index: 10;
     }
   </style>
-  <script>
-    // Center last row buttons in .nav grid if row is not full (pure JS, no dependencies)
-    document.addEventListener('DOMContentLoaded', function () {
-      const nav = document.querySelector('.nav');
-      if (!nav) return;
-      function centerLastRow() {
-        nav.querySelectorAll('.spacer').forEach(e=>e.remove());
-        const cols = getComputedStyle(nav).gridTemplateColumns.split(' ').length;
-        const btns = Array.from(nav.children).filter(el => el.tagName === 'A');
-        const remainder = btns.length % cols;
-        if (remainder !== 0 && cols > 1) {
-          const needed = cols - remainder;
-          const half = Math.floor(needed/2);
-          for(let i=0; i<half; i++) {
-            const sp = document.createElement('a');
-            sp.className = 'spacer';
-            nav.appendChild(sp);
-          }
-          for(let i=half; i<needed; i++) {
-            const sp = document.createElement('a');
-            sp.className = 'spacer';
-            nav.appendChild(sp);
-          }
-        }
-      }
-      centerLastRow();
-      window.addEventListener('resize', centerLastRow);
-    });
-  </script>
 </head>
 <body>
   <header>
     <div class="kenz-logo">
-      <img src="logo.png" alt="شعار مخيم كنز" onerror="this.style.display='none'">
+      <img src="kenz.jpg" alt="شعار مخيم كنز" />
     </div>
     <h1>مخيم كمبوند كنز الصيفي</h1>
     <h2>🎖️ الكل رابح 🎖️</h2>
   </header>
-  <div class="nav">
+  <div class="nav-grid">
     <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين</a>
     <a href="admin-contests.html" id="contestsLink" style="display:none">🏆 إدارة المسابقات</a>
     <a href="admin-scores.html" id="scoresLink" style="display:none">📝 تسجيل النقاط</a>
@@ -360,7 +335,9 @@
     <a href="participant-scores.html" id="queryScoresLink">🔍 استعلام عن النقاط</a>
     <a href="schedule.html">📅 الجدول الزمني</a>
     <a href="login.html" id="loginLink">دخول المشرفين</a>
-    <a href="#" onclick="adminLogout()" id="logoutLink" style="display:none">تسجيل خروج</a>
+    <!-- spacer لتكملة الخلية الرابعة للسطر الثاني (يخفيها) -->
+    <span class="spacer"></span>
+    <a href="#" onclick="adminLogout()" id="logoutLink" style="display:none;grid-column:1/-1;">تسجيل خروج</a>
   </div>
   <div class="table-container">
     <h2>قائمة المشاركين</h2>
@@ -434,7 +411,6 @@
       }
     }
     onAuthStateChanged(auth, (user) => {
-      // للمشاركين فقط، لا نعيد توجيه غير المشرفين
       handleNavDisplay(user);
     });
     window.adminLogout = function() {
