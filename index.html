@@ -195,7 +195,6 @@
 <body>
   <header>
     <div class="kenz-logo">
-      <!-- ضع صورة شعارك هنا أو اتركها افتراضية -->
       <img src="logo.png" alt="شعار مخيم كنز" onerror="this.style.display='none'">
     </div>
     <h1>مخيم كمبوند كنز الصيفي</h1>
@@ -210,7 +209,7 @@
       <a href="register.html">📝 تسجيل مشاركة جديدة</a>
       <a href="participant-scores.html">🔍 استعلام عن النقاط</a>
       <a href="schedule.html">📅 الجدول الزمني</a>
-      <a href="honor-board.html" id="honorLink">🏆 لوحة الشرف</a>
+      <a href="honor-board.html" id="honorLink" style="display:none">🏆 لوحة الشرف</a>
       <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين (للمشرفين)</a>
       <a href="admin-contests.html" id="contestsLink" style="display:none">🏆 إدارة المسابقات</a>
       <a href="admin-scores.html" id="scoresLink" style="display:none">📝 تسجيل النقاط</a>
@@ -235,6 +234,7 @@
       document.getElementById("adminLink").style.display = user ? "inline-block" : "none";
       document.getElementById("contestsLink").style.display = user ? "inline-block" : "none";
       document.getElementById("scoresLink").style.display = user ? "inline-block" : "none";
+      document.getElementById("honorLink").style.display = user ? "inline-block" : "none";
       document.getElementById("logoutLink").style.display = user ? "inline-block" : "none";
       document.getElementById("loginLink").style.display = user ? "none" : "inline-block";
     }
