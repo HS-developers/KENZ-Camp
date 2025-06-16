@@ -19,9 +19,32 @@
       flex-direction: column;
       padding-bottom: 56px; /* مساحة للفوتر حتى لا يغطي المحتوى */
     }
-    header {text-align:center;padding:14px 10px;background:#e3f2fd;box-shadow:0 1px 4px #0001;position:relative;}
-    header h1 {margin:0;font-size:28px;color:#004aad;}
-    header h2 {margin:8px 0 0;font-size:22px;color:#ff9800;}
+    header {
+      text-align: center;
+      padding: 38px 10px 16px 10px;
+      background: linear-gradient(90deg, #1976d2 40%, #ffd54f 110%);
+      box-shadow: 0 2px 16px #0001;
+      border-radius: 0 0 24px 24px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    header h1 {
+      margin: 0 0 2px 0;
+      font-size: 2.2em;
+      color: #004aad;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 6px #fff5, 0 1px 0 #ffd54f88;
+    }
+    header h2 {
+      margin: 10px 0 0;
+      font-size: 1.35em;
+      color: #ff9800;
+      font-weight: 700;
+      text-shadow: 0 1px 4px #1976d299;
+      letter-spacing: 1px;
+    }
     .nav {
       display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 10px;
       max-width: 700px; margin: 16px auto 16px auto;
