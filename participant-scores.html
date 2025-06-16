@@ -55,56 +55,37 @@
       max-width: 540px;
       margin: 24px auto 0 auto;
     }
+     .nav {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      max-width: 700px;
+      margin: 16px auto 16px auto;
+    }
     .nav a {
-      background: linear-gradient(90deg,#1976d2 55%, #43a047 100%);
-      color: #fff;
-      padding: 14px 0;
-      border-radius: 15px;
-      text-align: center;
-      text-decoration: none;
-      font-size: 1.1em;
-      font-weight: 700;
-      box-shadow: 0 1px 8px #1976d222;
-      letter-spacing: 1.1px;
-      transition: all 0.23s cubic-bezier(.46,1.48,.29,.99);
-      outline: none;
-      border: none;
-      display: block;
-      position: relative;
+      background-color: #007bff; color: white; padding: 10px; text-align: center;
+      border-radius: 8px; text-decoration: none; font-size: 14px; min-width: 120px;
+      transition: background 0.2s;
     }
-    .nav a::before {
-      content: "";
-      position: absolute;
-      left: 14px;
-      top: 10px;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: linear-gradient(135deg,#fffde7 60%,#ffd54f 100%);
-      opacity: 0.16;
-      z-index: 0;
-      transition: opacity 0.2s;
+    .nav a#adminLink { background-color: #8e24aa; }
+    .nav a#contestsLink { background-color: #1e88e5; }
+    .nav a#scoresLink { background-color: #43a047; }
+    .nav a#loginLink { background-color: #ff9800; color: #fff; font-weight: bold; }
+    .nav a#logoutLink { background-color: #d32f2f; }
+    .nav a#honorLink { background-color: #ff9800; color:#004aad; font-weight:bold;}
+    .nav a:hover { background-color: #0056b3; }
+    .nav a#adminLink:hover { background-color: #5e1972; }
+    .nav a#contestsLink:hover { background-color: #1565c0; }
+    .nav a#scoresLink:hover { background-color: #1b5e20; }
+    .nav a#loginLink:hover { background-color: #e65100; }
+    .nav a#logoutLink:hover { background-color: #b71c1c; }
+    .nav a#honorLink:hover { background-color: #e65100; color:#fff;}
+    @media (max-width: 600px) {
+      .nav { max-width: 99vw; }
+      .nav a { font-size: 13px; min-width: 99vw; }
     }
-    .nav a:hover, .nav a:focus {
-      background: linear-gradient(90deg,#43a047 40%, #1976d2 100%);
-      color: #fffde7;
-      box-shadow: 0 2px 20px #ffd54f88;
-      transform: scale(1.03) translateY(-2px);
-      text-shadow: 0 2px 12px #fff5;
-    }
-    .nav a#adminLink { background: linear-gradient(90deg,#8e24aa 70%, #1976d2 100%);}
-    .nav a#contestsLink { background: linear-gradient(90deg,#1e88e5 60%, #ffd54f 100%); color: #004aad; font-weight: 900;}
-    .nav a#scoresLink { background: linear-gradient(90deg,#43a047 70%, #ffd54f 100%); color: #fff;}
-    .nav a#honorLink { background: linear-gradient(90deg,#ff9800 65%, #ffd54f 100%); color: #004aad; font-weight: 900;}
-    .nav a#loginLink { background: linear-gradient(90deg,#ffd54f 60%, #ff9800 100%); color: #004aad; font-weight: 900;}
-    .nav a#logoutLink { background: linear-gradient(90deg,#d32f2f 70%, #ffd54f 100%); color: #fff;}
-    .nav a#adminLink:hover { background: linear-gradient(90deg,#5e1972 80%, #43a047 100%);}
-    .nav a#contestsLink:hover { background: linear-gradient(90deg,#ffd54f 75%, #1976d2 100%); color: #004aad;}
-    .nav a#scoresLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #43a047 100%);}
-    .nav a#honorLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #ff9800 100%); color: #d84315;}
-    .nav a#loginLink:hover { background: linear-gradient(90deg,#ff9800 70%, #ffd54f 100%);}
-    .nav a#logoutLink:hover { background: linear-gradient(90deg,#ffd54f 80%, #d32f2f 100%); color: #d32f2f;}
-    .nav {
       justify-items: stretch;
     }
     .nav > a {
