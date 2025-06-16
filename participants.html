@@ -6,19 +6,11 @@
   <title>قائمة المشاركين - مخيم كنز</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;900&display=swap" rel="stylesheet" />
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      box-sizing: border-box;
-      font-family: 'Cairo', sans-serif;
-    }
     body {
-      min-height: 100vh;
-      min-height: 100dvh;
       margin: 0;
+      font-family: 'Cairo', sans-serif;
       background: linear-gradient(135deg, #e3f2fd 0%, #fffde7 100%);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
@@ -66,7 +58,7 @@
       letter-spacing: 1px;
     }
 
-    /* زرار NAV */
+    /* شبكة الأزرار: صف أول 4/صف ثاني 3 */
     .nav-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -114,31 +106,15 @@
       transform: scale(1.03) translateY(-2px);
       text-shadow: 0 2px 12px #fff5;
     }
-    /* تخصيص الازرار */
+    /* تخصيص ألوان وخصائص لكل زر لو تحتاج */
     .nav-grid a#adminLink { background: linear-gradient(90deg,#8e24aa 70%, #1976d2 100%);}
     .nav-grid a#contestsLink { background: linear-gradient(90deg,#1e88e5 60%, #ffd54f 100%); color: #004aad; font-weight: 900;}
     .nav-grid a#scoresLink { background: linear-gradient(90deg,#43a047 70%, #ffd54f 100%); color: #fff;}
     .nav-grid a#honorLink { background: linear-gradient(90deg,#ff9800 65%, #ffd54f 100%); color: #004aad; font-weight: 900;}
     .nav-grid a#loginLink { background: linear-gradient(90deg,#ffd54f 60%, #ff9800 100%); color: #004aad; font-weight: 900;}
-    .nav-grid a#logoutLink { background: linear-gradient(90deg,#d32f2f 70%, #ffd54f 100%); color: #fff;}
-    /* توزيع 7 زرار: 4 في الأول 3 في الثاني */
-    .nav-grid a:nth-child(5) { grid-column: 1 / 2; grid-row: 2; }
-    .nav-grid a:nth-child(6) { grid-column: 2 / 3; grid-row: 2; }
-    .nav-grid a:nth-child(7) { grid-column: 3 / 4; grid-row: 2; }
-    /* اخفاء آخر خلية فارغة بالسطر الثاني */
-    .nav-grid .spacer {
-      grid-column: 4 / 5;
-      grid-row: 2;
-      pointer-events: none;
-      background: transparent;
-      box-shadow: none;
-      border: none;
-      visibility: hidden;
-    }
-    @media (max-width: 900px) {
-      .nav-grid { max-width: 99vw; }
-      .table-container { max-width: 99vw; padding: 16px 2vw; }
-    }
+    /* توزيع الصف الثاني: نضيف div فاصل فقط في أول خلية للصف الثاني */
+    .nav-grid .spacer { grid-row: 2; grid-column: 1 / 2; background: none; box-shadow: none; pointer-events: none; }
+
     @media (max-width: 850px) {
       .nav-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, auto);}
       .nav-grid a, .nav-grid .spacer { grid-column: auto !important; grid-row: auto !important;}
@@ -151,7 +127,6 @@
       header h1 { font-size: 1.3em; }
       header h2 { font-size: 1.07em; }
       .nav-grid a { font-size: 0.98em; padding: 10px 0;}
-      th, td { font-size: 0.98em; padding: 8px 4px;}
     }
     @media (max-width: 450px) {
       .nav-grid { grid-template-columns: 1fr; }
@@ -328,16 +303,20 @@
     <h2>🎖️ الكل رابح 🎖️</h2>
   </header>
   <div class="nav-grid">
+    <!-- الصف الأول 4 أزرار -->
     <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين</a>
     <a href="admin-contests.html" id="contestsLink" style="display:none">🏆 إدارة المسابقات</a>
     <a href="admin-scores.html" id="scoresLink" style="display:none">📝 تسجيل النقاط</a>
     <a href="honor-board.html" id="honorLink" style="display:none">🏆 لوحة الشرف</a>
+    <!-- الصف الثاني: div فارغ (spacer) ثم 3 أزرار -->
+    <div class="spacer"></div>
     <a href="participant-scores.html" id="queryScoresLink">🔍 استعلام عن النقاط</a>
     <a href="schedule.html">📅 الجدول الزمني</a>
     <a href="login.html" id="loginLink">دخول المشرفين</a>
-    <!-- spacer لتكملة الخلية الرابعة للسطر الثاني (يخفيها) -->
-    <span class="spacer"></span>
-    <a href="#" onclick="adminLogout()" id="logoutLink" style="display:none;grid-column:1/-1;">تسجيل خروج</a>
+  </div>
+  <!-- زر تسجيل خروج خارج شبكة الأزرار (أسفل الشبكة) -->
+  <div style="text-align:center; margin-top:10px;">
+    <a href="#" onclick="adminLogout()" id="logoutLink" style="display:none; background: linear-gradient(90deg,#d32f2f 70%, #ffd54f 100%); color: #fff; border-radius:10px; padding:10px 24px; font-size:1.15em; font-weight:700; text-decoration:none; box-shadow: 0 1px 8px #ffd54f22;">تسجيل خروج</a>
   </div>
   <div class="table-container">
     <h2>قائمة المشاركين</h2>
