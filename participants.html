@@ -124,6 +124,23 @@
     .nav a#honorLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #ff9800 100%); color: #d84315;}
     .nav a#loginLink:hover { background: linear-gradient(90deg,#ff9800 70%, #ffd54f 100%);}
     .nav a#logoutLink:hover { background: linear-gradient(90deg,#ffd54f 80%, #d32f2f 100%); color: #d32f2f;}
+    /* Center last row if 1 or 2 buttons only */
+    .nav {
+      justify-items: stretch;
+    }
+    .nav > a {
+      min-width: 0;
+    }
+    .nav:has(a:nth-child(4)) {
+      /* nothing, just for support in some browsers */
+    }
+    .nav .spacer {
+      pointer-events: none;
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      visibility: hidden;
+    }
     @media (max-width: 900px) {
       .nav { max-width: 99vw; }
       .table-container { max-width: 99vw; padding: 16px 2vw; }
@@ -302,49 +319,41 @@
       z-index: 10;
     }
   </style>
-</head>
-<body>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    const firebaseConfig = {
-      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
-      authDomain: "kenz-camp.firebaseapp.com",
-      projectId: "kenz-camp",
-    };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    function handleNavDisplay(user) {
-      if (user) {
-        document.getElementById("adminLink").style.display = "inline-block";
-        document.getElementById("contestsLink").style.display = "inline-block";
-        document.getElementById("scoresLink").style.display = "inline-block";
-        document.getElementById("honorLink").style.display = "inline-block";
-        document.getElementById("logoutLink").style.display = "inline-block";
-        document.getElementById("loginLink").style.display = "none";
-      } else {
-        document.getElementById("adminLink").style.display = "none";
-        document.getElementById("contestsLink").style.display = "none";
-        document.getElementById("scoresLink").style.display = "none";
-        document.getElementById("honorLink").style.display = "none";
-        document.getElementById("logoutLink").style.display = "none";
-        document.getElementById("loginLink").style.display = "inline-block";
+  <script>
+    // Center last row buttons in .nav grid if row is not full (pure JS, no dependencies)
+    document.addEventListener('DOMContentLoaded', function () {
+      const nav = document.querySelector('.nav');
+      if (!nav) return;
+      function centerLastRow() {
+        // Remove old spacers
+        nav.querySelectorAll('.spacer').forEach(e=>e.remove());
+        const cols = getComputedStyle(nav).gridTemplateColumns.split(' ').length;
+        const btns = Array.from(nav.children).filter(el => el.tagName === 'A');
+        const remainder = btns.length % cols;
+        if (remainder !== 0 && cols > 1) {
+          const needed = cols - remainder;
+          // Add empty spacers to center
+          const half = Math.floor(needed/2);
+          for(let i=0; i<half; i++) {
+            const sp = document.createElement('a');
+            sp.className = 'spacer';
+            nav.appendChild(sp);
+          }
+          // Insert any extra after the existing buttons to right
+          for(let i=half; i<needed; i++) {
+            const sp = document.createElement('a');
+            sp.className = 'spacer';
+            nav.appendChild(sp);
+          }
+        }
       }
-    }
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-      } else {
-        handleNavDisplay(user);
-      }
-    });
-    window.adminLogout = function() {
-      signOut(auth).then(() => { window.location.href = "login.html"; });
-    }
-    window.addEventListener('DOMContentLoaded', () => {
-      handleNavDisplay(auth.currentUser);
+      centerLastRow();
+      // Re-center on resize (for responsive columns)
+      window.addEventListener('resize', centerLastRow);
     });
   </script>
+</head>
+<body>
   <header>
     <div class="kenz-logo">
       <img src="logo.png" alt="شعار مخيم كنز" onerror="this.style.display='none'">
@@ -406,6 +415,7 @@
   </footer>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     const firebaseConfig = {
       apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
@@ -413,8 +423,41 @@
       projectId: "kenz-camp",
     };
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const auth = getAuth(app);
+    function handleNavDisplay(user) {
+      if (user) {
+        document.getElementById("adminLink").style.display = "inline-block";
+        document.getElementById("contestsLink").style.display = "inline-block";
+        document.getElementById("scoresLink").style.display = "inline-block";
+        document.getElementById("honorLink").style.display = "inline-block";
+        document.getElementById("logoutLink").style.display = "inline-block";
+        document.getElementById("loginLink").style.display = "none";
+      } else {
+        document.getElementById("adminLink").style.display = "none";
+        document.getElementById("contestsLink").style.display = "none";
+        document.getElementById("scoresLink").style.display = "none";
+        document.getElementById("honorLink").style.display = "none";
+        document.getElementById("logoutLink").style.display = "none";
+        document.getElementById("loginLink").style.display = "inline-block";
+      }
+    }
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        handleNavDisplay(user);
+      }
+    });
+    window.adminLogout = function() {
+      signOut(auth).then(() => { window.location.href = "login.html"; });
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      handleNavDisplay(auth.currentUser);
+    });
 
+    // تحميل المشاركين
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    const db = getFirestore(app);
     async function loadParticipants() {
       const querySnapshot = await getDocs(collection(db, "participants"));
       const tableBody = document.getElementById("participants-body");
@@ -437,7 +480,6 @@
       });
       countElement.textContent = `عدد المشاركين: ${count}`;
     }
-
     function filterTable() {
       const input = document.getElementById("search-input").value.toLowerCase();
       const rows = document.querySelectorAll("#participants-body tr");
@@ -447,7 +489,6 @@
         row.style.display = text.includes(input) ? "" : "none";
       });
     }
-
     window.addEventListener("DOMContentLoaded", () => {
       loadParticipants();
       document.getElementById("search-input").addEventListener("input", filterTable);
