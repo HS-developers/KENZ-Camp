@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>بوابة مخيم كنز الصيفي</title>
+  <title>تسجيل مشاركة جديدة - مخيم كنز</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;900&display=swap" rel="stylesheet" />
   <style>
     html, body {
@@ -77,104 +77,101 @@
       flex-direction: column;
       align-items: center;
     }
-    .welcome {
+    .form-heading {
       text-align: center;
-      font-size: 1.35em;
-      color: #1976d2;
-      font-weight: bold;
-      margin-bottom: 30px;
-      line-height: 1.6;
-      text-shadow: 0 1px 9px #fff5;
+      font-size: 1.6em;
+      color: #ffffff;
+      background-color: #004aad;
+      padding: 14px;
+      border-radius: 14px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.07);
+      margin-bottom: 25px;
+      font-weight: 900;
+      letter-spacing: 1.1px;
+      margin-top: 0;
     }
-    .nav {
+    form {
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      background: #fafafa;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px #ffd54f22;
+      padding: 27px 20px 20px 20px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      align-items: stretch;
-      width: 100%;
-      margin-top: 10px;
-      margin-bottom: 2px;
+      gap: 12px;
     }
-    .nav a {
-      background: linear-gradient(90deg,#1976d2 55%, #43a047 100%);
-      color: #fff;
-      padding: 17px 0;
-      border-radius: 15px;
-      text-align: center;
-      text-decoration: none;
-      font-size: 1.18em;
-      font-weight: 700;
-      box-shadow: 0 1px 8px #1976d222;
-      letter-spacing: 1.1px;
-      transition: all 0.23s cubic-bezier(.46,1.48,.29,.99);
-      outline: none;
-      border: none;
+    label {
       display: block;
-      position: relative;
+      margin-bottom: 3px;
+      font-weight: bold;
+      color: #1976d2;
+      font-size: 1.1em;
+      letter-spacing: 0.5px;
     }
-    .nav a::before {
-      content: "";
-      position: absolute;
-      left: 14px;
-      top: 14px;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: linear-gradient(135deg,#fffde7 60%,#ffd54f 100%);
-      opacity: 0.16;
-      z-index: 0;
-      transition: opacity 0.2s;
-    }
-    .nav a:hover, .nav a:focus {
-      background: linear-gradient(90deg,#43a047 40%, #1976d2 100%);
-      color: #fffde7;
-      box-shadow: 0 2px 20px #ffd54f88;
-      transform: scale(1.03) translateY(-2px);
-      text-shadow: 0 2px 12px #fff5;
-    }
-    .nav a#adminLink {
-      background: linear-gradient(90deg,#8e24aa 70%, #1976d2 100%);
-    }
-    .nav a#contestsLink {
-      background: linear-gradient(90deg,#1e88e5 60%, #ffd54f 100%);
-      color: #004aad;
-      font-weight: 900;
-    }
-    .nav a#scoresLink {
-      background: linear-gradient(90deg,#43a047 70%, #ffd54f 100%);
-      color: #fff;
-    }
-    .nav a#honorLink {
-      background: linear-gradient(90deg,#ff9800 65%, #ffd54f 100%);
-      color: #004aad;
-      font-weight: 900;
-    }
-    .nav a#loginLink {
-      background: linear-gradient(90deg,#ffd54f 60%, #ff9800 100%);
-      color: #004aad;
-      font-weight: 900;
-    }
-    .nav a#logoutLink {
-      background: linear-gradient(90deg,#d32f2f 70%, #ffd54f 100%);
-      color: #fff;
-    }
-    .nav a#adminLink:hover { background: linear-gradient(90deg,#5e1972 80%, #43a047 100%);}
-    .nav a#contestsLink:hover { background: linear-gradient(90deg,#ffd54f 75%, #1976d2 100%); color: #004aad;}
-    .nav a#scoresLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #43a047 100%);}
-    .nav a#honorLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #ff9800 100%); color: #d84315;}
-    .nav a#loginLink:hover { background: linear-gradient(90deg,#ff9800 70%, #ffd54f 100%);}
-    .nav a#logoutLink:hover { background: linear-gradient(90deg,#ffd54f 80%, #d32f2f 100%); color: #d32f2f;}
-    .nav a#adminLink, .nav a#contestsLink, .nav a#scoresLink, .nav a#honorLink, .nav a#loginLink, .nav a#logoutLink {
+    input, select {
+      width: 100%;
+      padding: 11px;
+      margin-top: 4px;
+      border: 1.4px solid #ccc;
+      border-radius: 8px;
       font-size: 1.05em;
+      background: #fffbe7;
+      transition: border 0.2s;
+      font-family: 'Cairo', sans-serif;
     }
-    @media (max-width: 700px) {
-      .main-content { max-width: 98vw; padding: 18px 2vw 14px 2vw;}
-      .kenz-logo { width: 70px; height: 70px;}
-      .kenz-logo img { width: 65px; height: 65px;}
-      header h1 { font-size: 1.3em; }
-      header h2 { font-size: 1.07em; }
-      .nav a { font-size: 0.98em; padding: 11px 0;}
+    input:focus, select:focus {
+      border: 2px solid #1976d2;
+      outline: none;
     }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(90deg,#43a047 60%, #ffd54f 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.12em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 10px #43a04722;
+      letter-spacing: 1px;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    button:hover:enabled {
+      background: linear-gradient(90deg,#ffd54f 65%, #43a047 100%);
+      color: #1976d2;
+    }
+    .warning {
+      color: #d32f2f;
+      font-size: 14px;
+      margin: 3px 0 0 0;
+      text-align: right;
+    }
+    .back-button {
+      text-align: center;
+      margin: 24px auto 0;
+    }
+    .back-button a {
+      background: linear-gradient(90deg,#1976d2 60%, #ffd54f 100%);
+      color: white;
+      padding: 11px 26px;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 1.14em;
+      font-weight: 700;
+      display: inline-block;
+      box-shadow: 0 2px 10px #ffd54f33;
+      letter-spacing: 1px;
+      transition: background 0.2s;
+    }
+    .back-button a:hover { background: linear-gradient(90deg,#ffd54f 70%, #1976d2 100%); color: #004aad;}
     footer {
       background: linear-gradient(90deg,#e3f2fd 70%, #ffd54f 100%);
       font-size: 15px;
@@ -190,6 +187,13 @@
       letter-spacing: 1px;
       z-index: 10;
     }
+    @media (max-width: 700px) {
+      .main-content { max-width: 98vw; padding: 18px 2vw 14px 2vw;}
+      .kenz-logo { width: 70px; height: 70px;}
+      .kenz-logo img { width: 65px; height: 65px;}
+      header h1 { font-size: 1.3em; }
+      header h2 { font-size: 1.07em; }
+    }
   </style>
 </head>
 <body>
@@ -198,23 +202,37 @@
       <img src="logo.png" alt="شعار مخيم كنز" onerror="this.style.display='none'">
     </div>
     <h1>مخيم كمبوند كنز الصيفي</h1>
-    <h2>🎉 بوابتك للمتعة والتعلم والجوائز!</h2>
+    <h2>📝 تسجيل مشاركة جديدة</h2>
   </header>
   <div class="main-content">
-    <div class="welcome">
-      مرحباً بك في بوابة مخيم <span style="color:#ff9800">كنز الصيفي</span>! <br>
-      اختر الخدمة التي ترغب في استخدامها من القائمة التالية:
-    </div>
-    <div class="nav">
-      <a href="register.html">📝 تسجيل مشاركة جديدة</a>
-      <a href="participant-scores.html">🔍 استعلام عن النقاط</a>
-      <a href="schedule.html">📅 الجدول الزمني</a>
-      <a href="honor-board.html" id="honorLink" style="display:none">🏆 لوحة الشرف</a>
-      <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين (للمشرفين)</a>
-      <a href="admin-contests.html" id="contestsLink" style="display:none">🏆 إدارة المسابقات</a>
-      <a href="admin-scores.html" id="scoresLink" style="display:none">📝 تسجيل النقاط</a>
-      <a href="login.html" id="loginLink">دخول المشرفين</a>
-      <a href="#" id="logoutLink" style="display:none">تسجيل الخروج</a>
+    <h2 class="form-heading">نموذج تسجيل المشاركة</h2>
+    <form id="registrationForm">
+      <label for="name">اسم المشارك (ثلاثي):</label>
+      <input type="text" id="name" name="name" required pattern="^\s*\S+\s+\S+\s+\S+.*$" title="من فضلك أدخل الاسم ثلاثيًا">
+
+      <label for="age">العمر:</label>
+      <input type="number" id="age" name="age" required>
+      <div id="age-warning" class="warning"></div>
+
+      <label for="guardian">رقم الوحدة:</label>
+      <input type="text" id="guardian" name="guardian" required>
+
+      <label for="phone">رقم التواصل:</label>
+      <input type="tel" id="phone" name="phone" required>
+
+      <label for="group">الفئة العمرية:</label>
+      <select id="group" name="group" disabled>
+        <option value="">الفئة تُحدد تلقائيًا</option>
+        <option value="10-12">من 10 إلى 12 سنة</option>
+        <option value="13-15">من 13 إلى 15 سنة</option>
+        <option value="16-18">من 16 إلى 18 سنة</option>
+      </select>
+      <input type="hidden" id="groupHidden" name="groupHidden">
+
+      <button type="submit" id="submit-btn">تسجيل</button>
+    </form>
+    <div class="back-button">
+      <a href="index.html">⬅ العودة إلى الصفحة الرئيسية</a>
     </div>
   </div>
   <footer>
@@ -222,29 +240,90 @@
   </footer>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     const firebaseConfig = {
       apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
       authDomain: "kenz-camp.firebaseapp.com",
       projectId: "kenz-camp",
     };
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    function handleNavDisplay(user) {
-      document.getElementById("adminLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("contestsLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("scoresLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("honorLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("logoutLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("loginLink").style.display = user ? "none" : "inline-block";
-    }
-    onAuthStateChanged(auth, (user) => {
-      handleNavDisplay(user);
+    const db = getFirestore(app);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('registrationForm');
+      const ageInput = form.age;
+      const groupSelect = form.group;
+      const hiddenGroup = form.groupHidden;
+      const ageWarning = document.getElementById('age-warning');
+      const submitBtn = document.getElementById('submit-btn');
+
+      function updateGroup(age) {
+        if (age >= 10 && age <= 12) {
+          groupSelect.value = "10-12";
+          hiddenGroup.value = "10-12";
+          ageWarning.textContent = "";
+          submitBtn.disabled = false;
+        } else if (age >= 13 && age <= 15) {
+          groupSelect.value = "13-15";
+          hiddenGroup.value = "13-15";
+          ageWarning.textContent = "";
+          submitBtn.disabled = false;
+        } else if (age >= 16 && age <= 18) {
+          groupSelect.value = "16-18";
+          hiddenGroup.value = "16-18";
+          ageWarning.textContent = "";
+          submitBtn.disabled = false;
+        } else {
+          groupSelect.value = "";
+          hiddenGroup.value = "";
+          ageWarning.textContent = "⚠️ يُسمح فقط بالأعمار من 10 إلى 18 سنة.";
+          submitBtn.disabled = true;
+        }
+      }
+
+      ageInput.addEventListener('input', () => {
+        const age = parseInt(ageInput.value);
+        if (!isNaN(age)) {
+          updateGroup(age);
+        } else {
+          groupSelect.value = "";
+          hiddenGroup.value = "";
+          ageWarning.textContent = "";
+          submitBtn.disabled = false;
+        }
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = form.name.value;
+        const age = form.age.value;
+        const guardian = form.guardian.value;
+        const phone = form.phone.value;
+        const group = form.groupHidden.value;
+        const timestamp = new Date();
+        const uniqueId = `KZ-${timestamp.toISOString().slice(0,10).replaceAll('-', '')}-${Date.now().toString().slice(-6)}`;
+
+        try {
+          await addDoc(collection(db, "participants"), {
+            name,
+            age,
+            guardian,
+            phone,
+            group,
+            participantNumber: uniqueId,
+            timestamp
+          });
+          alert(`تم التسجيل بنجاح 🎉\nرقم المشارك الخاص بك: ${uniqueId}`);
+          form.reset();
+          groupSelect.value = "";
+          hiddenGroup.value = "";
+          ageWarning.textContent = "";
+        } catch (error) {
+          alert("حدث خطأ أثناء التسجيل ❌");
+          console.error("Error adding document: ", error);
+        }
+      });
     });
-    document.getElementById("logoutLink").onclick = (e) => {
-      e.preventDefault();
-      signOut(auth);
-    };
   </script>
 </body>
 </html>
