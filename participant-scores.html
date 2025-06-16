@@ -3,41 +3,153 @@
 <head>
   <meta charset="UTF-8" />
   <title>استعلام عن النقاط - مخيم كنز</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;900&display=swap" rel="stylesheet" />
   <style>
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
-      font-family: Cairo, sans-serif;
-      background: #f4f4f4;
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #e3f2fd 0%, #fffde7 100%);
       box-sizing: border-box;
     }
     body {
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      /* إضافة مساحة أسفل الصفحة حتى لا يغطي الفوتر أي محتوى */
       padding-bottom: 56px;
     }
     header {
       text-align: center;
-      padding: 18px 10px 10px 10px;
-      background: #e3f2fd;
-      box-shadow: 0 1px 4px #0001;
+      padding: 38px 10px 16px 10px;
+      background: linear-gradient(90deg, #1976d2 40%, #ffd54f 110%);
+      box-shadow: 0 2px 16px #0001;
+      border-radius: 0 0 24px 24px;
       position: relative;
+      z-index: 1;
+    }
+    .kenz-logo {
+      width: 100px; height: 100px;
+      background: #fff;
+      border-radius: 50%;
+      margin: 0 auto 8px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px #1976d244;
+      overflow: hidden;
+    }
+    .kenz-logo img {
+      width: 95px;
+      height: 95px;
+      object-fit: contain;
+      border-radius: 50%;
+      display: block;
     }
     header h1 {
-      margin: 0;
-      font-size: 32px;
+      margin: 0 0 2px 0;
+      font-size: 2.2em;
       color: #004aad;
+      font-weight: 900;
       letter-spacing: 2px;
+      text-shadow: 0 1px 6px #fff5, 0 1px 0 #ffd54f88;
     }
     header h2 {
       margin: 10px 0 0;
-      font-size: 23px;
+      font-size: 1.35em;
       color: #ff9800;
       font-weight: 700;
+      text-shadow: 0 1px 4px #1976d299;
+      letter-spacing: 1px;
+    }
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      align-items: stretch;
+      width: 100%;
+      max-width: 540px;
+      margin: 24px auto 0 auto;
+    }
+    .nav a {
+      background: linear-gradient(90deg,#1976d2 55%, #43a047 100%);
+      color: #fff;
+      padding: 14px 0;
+      border-radius: 15px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 1.1em;
+      font-weight: 700;
+      box-shadow: 0 1px 8px #1976d222;
+      letter-spacing: 1.1px;
+      transition: all 0.23s cubic-bezier(.46,1.48,.29,.99);
+      outline: none;
+      border: none;
+      display: block;
+      position: relative;
+    }
+    .nav a::before {
+      content: "";
+      position: absolute;
+      left: 14px;
+      top: 10px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg,#fffde7 60%,#ffd54f 100%);
+      opacity: 0.16;
+      z-index: 0;
+      transition: opacity 0.2s;
+    }
+    .nav a:hover, .nav a:focus {
+      background: linear-gradient(90deg,#43a047 40%, #1976d2 100%);
+      color: #fffde7;
+      box-shadow: 0 2px 20px #ffd54f88;
+      transform: scale(1.03) translateY(-2px);
+      text-shadow: 0 2px 12px #fff5;
+    }
+    .nav a#adminLink { background: linear-gradient(90deg,#8e24aa 70%, #1976d2 100%);}
+    .nav a#contestsLink { background: linear-gradient(90deg,#1e88e5 60%, #ffd54f 100%); color: #004aad; font-weight: 900;}
+    .nav a#scoresLink { background: linear-gradient(90deg,#43a047 70%, #ffd54f 100%); color: #fff;}
+    .nav a#honorLink { background: linear-gradient(90deg,#ff9800 65%, #ffd54f 100%); color: #004aad; font-weight: 900;}
+    .nav a#loginLink { background: linear-gradient(90deg,#ffd54f 60%, #ff9800 100%); color: #004aad; font-weight: 900;}
+    .nav a#logoutLink { background: linear-gradient(90deg,#d32f2f 70%, #ffd54f 100%); color: #fff;}
+    .nav a#adminLink:hover { background: linear-gradient(90deg,#5e1972 80%, #43a047 100%);}
+    .nav a#contestsLink:hover { background: linear-gradient(90deg,#ffd54f 75%, #1976d2 100%); color: #004aad;}
+    .nav a#scoresLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #43a047 100%);}
+    .nav a#honorLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #ff9800 100%); color: #d84315;}
+    .nav a#loginLink:hover { background: linear-gradient(90deg,#ff9800 70%, #ffd54f 100%);}
+    .nav a#logoutLink:hover { background: linear-gradient(90deg,#ffd54f 80%, #d32f2f 100%); color: #d32f2f;}
+    .nav {
+      justify-items: stretch;
+    }
+    .nav > a {
+      min-width: 0;
+    }
+    .nav .spacer {
+      pointer-events: none;
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      visibility: hidden;
+    }
+    @media (max-width: 900px) {
+      .nav { max-width: 99vw; }
+      .container { max-width: 98vw; padding: 20px 3vw; }
+    }
+    @media (max-width: 700px) {
+      .nav { grid-template-columns: repeat(2, 1fr); gap: 11px; }
+      .kenz-logo { width: 70px; height: 70px;}
+      .kenz-logo img { width: 65px; height: 65px;}
+      header h1 { font-size: 1.3em; }
+      header h2 { font-size: 1.07em; }
+      .nav a { font-size: 0.98em; padding: 10px 0;}
+      th, td { font-size: 0.98em; padding: 8px 4px;}
+      .container { padding: 11px 1vw 18px 1vw; }
+    }
+    @media (max-width: 450px) {
+      .nav { grid-template-columns: 1fr; }
     }
     .container {
       flex: 0 0 auto;
@@ -51,25 +163,6 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-    }
-    .back-home {
-      text-align: right;
-      margin: 0 0 18px 0;
-    }
-    .back-home a {
-      background: #007bff;
-      color: #fff;
-      padding: 10px 24px;
-      text-decoration: none;
-      border-radius: 10px;
-      font-weight: bold;
-      font-size: 16px;
-      display: inline-block;
-      box-shadow: 0 1px 4px #0001;
-      transition: background 0.2s;
-    }
-    .back-home a:hover {
-      background: #0056b3;
     }
     .search-bar {
       text-align: center;
@@ -149,11 +242,8 @@
       font-weight: bold;
       letter-spacing: 1px;
     }
-    .no-margin {
-      margin: 0 !important;
-    }
     footer {
-      background: #e3f2fd;
+      background: linear-gradient(90deg,#e3f2fd 70%, #ffd54f 100%);
       box-shadow: 0 -1px 4px #0001;
       border-radius: 0 0 12px 12px;
       font-size: 16px;
@@ -168,48 +258,56 @@
       z-index: 100;
       margin: 0;
     }
-    @media (max-width: 900px) {
-      .container { max-width: 98vw; padding: 20px 3vw; }
-      .search-bar input { width: 98%; }
-    }
-    @media (max-width: 600px) {
-      header h1 { font-size: 23px; }
-      header h2 { font-size: 17px; }
-      .container {
-        padding: 11px 1vw 18px 1vw;
-        margin: 14px auto 12px auto;
-        min-height: unset;
-        box-shadow: 0 1px 6px #0001;
-      }
-      .search-bar input {
-        font-size: 18px;
-        padding: 10px 8px;
-        width: 98%;
-        max-width: 98vw;
-      }
-      .search-bar {
-        margin-bottom: 16px;
-      }
-      th, td { font-size: 13px; padding: 10px 4px; }
-      th { font-size: 14px; }
-      .back-home a { font-size: 13px; padding: 7px 9px; }
-      .msg { font-size: 15px; margin: 18px 0 8px 0; }
-      #scoresTableWrap { margin-top: 3px; margin-bottom: 7px; }
-      body {
-        padding-bottom: 56px;
-      }
-    }
   </style>
+  <script>
+    // Center last row buttons in .nav grid if row is not full (pure JS, no dependencies)
+    document.addEventListener('DOMContentLoaded', function () {
+      const nav = document.querySelector('.nav');
+      if (!nav) return;
+      function centerLastRow() {
+        nav.querySelectorAll('.spacer').forEach(e=>e.remove());
+        const cols = getComputedStyle(nav).gridTemplateColumns.split(' ').length;
+        const btns = Array.from(nav.children).filter(el => el.tagName === 'A');
+        const remainder = btns.length % cols;
+        if (remainder !== 0 && cols > 1) {
+          const needed = cols - remainder;
+          const half = Math.floor(needed/2);
+          for(let i=0; i<half; i++) {
+            const sp = document.createElement('a');
+            sp.className = 'spacer';
+            nav.appendChild(sp);
+          }
+          for(let i=half; i<needed; i++) {
+            const sp = document.createElement('a');
+            sp.className = 'spacer';
+            nav.appendChild(sp);
+          }
+        }
+      }
+      centerLastRow();
+      window.addEventListener('resize', centerLastRow);
+    });
+  </script>
 </head>
 <body>
   <header>
+    <div class="kenz-logo">
+      <img src="logo.png" alt="شعار مخيم كنز" onerror="this.style.display='none'">
+    </div>
     <h1>مخيم كمبوند كنز الصيفي</h1>
     <h2>🔍 استعلام عن النقاط 🔍</h2>
   </header>
+  <div class="nav">
+    <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين</a>
+    <a href="admin-contests.html" id="contestsLink" style="display:none">🏆 إدارة المسابقات</a>
+    <a href="admin-scores.html" id="scoresLink" style="display:none">📝 تسجيل النقاط</a>
+    <a href="honor-board.html" id="honorLink" style="display:none">🏆 لوحة الشرف</a>
+    <a href="participant-scores.html" id="queryScoresLink">🔍 استعلام عن النقاط</a>
+    <a href="schedule.html">📅 الجدول الزمني</a>
+    <a href="login.html" id="loginLink">دخول المشرفين</a>
+    <a href="#" onclick="adminLogout()" id="logoutLink" style="display:none">تسجيل خروج</a>
+  </div>
   <div class="container">
-    <div class="back-home">
-      <a href="index.html">🏠 العودة للرئيسية</a>
-    </div>
     <div class="search-bar">
       <input type="text" id="partNumInput" placeholder="أدخل رقم المشارك أو الاسم..." />
       <button id="searchBtn">بحث</button>
@@ -218,11 +316,11 @@
     <div class="msg" id="msgBox" style="display:none"></div>
   </div>
   <footer>
-    All Right Reserved © 2025 Genius Tech Co
+    جميع الحقوق محفوظة © 2025 Genius Tech Co
   </footer>
   <script type="module">
-    // Firebase imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     const firebaseConfig = {
       apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
@@ -230,7 +328,22 @@
       projectId: "kenz-camp",
     };
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
+
+    // Navbar display logic
+    function handleNavDisplay(user) {
+      document.getElementById("adminLink").style.display = user ? "inline-block" : "none";
+      document.getElementById("contestsLink").style.display = user ? "inline-block" : "none";
+      document.getElementById("scoresLink").style.display = user ? "inline-block" : "none";
+      document.getElementById("honorLink").style.display = user ? "inline-block" : "none";
+      document.getElementById("logoutLink").style.display = user ? "inline-block" : "none";
+      document.getElementById("loginLink").style.display = user ? "none" : "inline-block";
+    }
+    onAuthStateChanged(auth, (user) => handleNavDisplay(user));
+    window.adminLogout = function() {
+      signOut(auth);
+    };
 
     const searchBtn = document.getElementById("searchBtn");
     const partNumInput = document.getElementById("partNumInput");
@@ -316,14 +429,13 @@
       let userTotal = 0;
       let totalPossible = 0;
       contests.forEach(c => {
-        // تحقق أن المشارك ضمن مصفوفة المشاركين في المسابقة
         if (Array.isArray(c.participants) && c.participants.includes(participant.participantNumber)) {
           let userPoints = scoresPerContest[c.id]?.[participant.participantNumber];
           contestRows.push({
             name: c.name,
             startDate: c.startDate,
             endDate: c.endDate,
-            userPoints: typeof userPoints === "number" ? userPoints : null // null لو لم تسجل بعد
+            userPoints: typeof userPoints === "number" ? userPoints : null
           });
           totalPossible += 10;
           if (typeof userPoints === "number") userTotal += userPoints;
