@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>عرض المشاركين - مخيم كنز</title>
+  <title>قائمة المشاركين - مخيم كنز</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;900&display=swap" rel="stylesheet" />
   <style>
     html, body {
@@ -65,7 +65,6 @@
       text-shadow: 0 1px 4px #1976d299;
       letter-spacing: 1px;
     }
-    /* NAV BAR STYLES */
     .nav {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -124,15 +123,11 @@
     .nav a#honorLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #ff9800 100%); color: #d84315;}
     .nav a#loginLink:hover { background: linear-gradient(90deg,#ff9800 70%, #ffd54f 100%);}
     .nav a#logoutLink:hover { background: linear-gradient(90deg,#ffd54f 80%, #d32f2f 100%); color: #d32f2f;}
-    /* Center last row if 1 or 2 buttons only */
     .nav {
       justify-items: stretch;
     }
     .nav > a {
       min-width: 0;
-    }
-    .nav:has(a:nth-child(4)) {
-      /* nothing, just for support in some browsers */
     }
     .nav .spacer {
       pointer-events: none;
@@ -325,21 +320,18 @@
       const nav = document.querySelector('.nav');
       if (!nav) return;
       function centerLastRow() {
-        // Remove old spacers
         nav.querySelectorAll('.spacer').forEach(e=>e.remove());
         const cols = getComputedStyle(nav).gridTemplateColumns.split(' ').length;
         const btns = Array.from(nav.children).filter(el => el.tagName === 'A');
         const remainder = btns.length % cols;
         if (remainder !== 0 && cols > 1) {
           const needed = cols - remainder;
-          // Add empty spacers to center
           const half = Math.floor(needed/2);
           for(let i=0; i<half; i++) {
             const sp = document.createElement('a');
             sp.className = 'spacer';
             nav.appendChild(sp);
           }
-          // Insert any extra after the existing buttons to right
           for(let i=half; i<needed; i++) {
             const sp = document.createElement('a');
             sp.className = 'spacer';
@@ -348,7 +340,6 @@
         }
       }
       centerLastRow();
-      // Re-center on resize (for responsive columns)
       window.addEventListener('resize', centerLastRow);
     });
   </script>
@@ -424,6 +415,7 @@
     };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+
     function handleNavDisplay(user) {
       if (user) {
         document.getElementById("adminLink").style.display = "inline-block";
@@ -442,11 +434,8 @@
       }
     }
     onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-      } else {
-        handleNavDisplay(user);
-      }
+      // للمشاركين فقط، لا نعيد توجيه غير المشرفين
+      handleNavDisplay(user);
     });
     window.adminLogout = function() {
       signOut(auth).then(() => { window.location.href = "login.html"; });
@@ -456,7 +445,6 @@
     });
 
     // تحميل المشاركين
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     const db = getFirestore(app);
     async function loadParticipants() {
       const querySnapshot = await getDocs(collection(db, "participants"));
@@ -479,6 +467,9 @@
         count++;
       });
       countElement.textContent = `عدد المشاركين: ${count}`;
+      if (count === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7">لا يوجد مشاركين بعد.</td></tr>`;
+      }
     }
     function filterTable() {
       const input = document.getElementById("search-input").value.toLowerCase();
