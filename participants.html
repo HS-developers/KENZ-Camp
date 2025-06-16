@@ -58,79 +58,39 @@
       letter-spacing: 1px;
     }
 
-    /* شبكة الأزرار: صف أول 4/صف ثاني 3 */
-    .nav-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(2, auto);
-      gap: 18px;
-      align-items: stretch;
-      width: 100%;
+    /* أزرار القائمة بنفس تنسيق honor-board */
+    .nav {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
       max-width: 700px;
-      margin: 24px auto 0 auto;
+      margin: 16px auto 16px auto;
     }
-    .nav-grid a {
-      background: linear-gradient(90deg,#1976d2 55%, #43a047 100%);
-      color: #fff;
-      padding: 14px 0;
-      border-radius: 15px;
-      text-align: center;
-      text-decoration: none;
-      font-size: 1.1em;
-      font-weight: 700;
-      box-shadow: 0 1px 8px #1976d222;
-      letter-spacing: 1.1px;
-      transition: all 0.23s cubic-bezier(.46,1.48,.29,.99);
-      outline: none;
-      border: none;
-      display: block;
-      position: relative;
+    .nav a {
+      background-color: #007bff; color: white; padding: 10px; text-align: center;
+      border-radius: 8px; text-decoration: none; font-size: 14px; min-width: 120px;
+      transition: background 0.2s;
     }
-    .nav-grid a::before {
-      content: "";
-      position: absolute;
-      left: 14px;
-      top: 10px;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: linear-gradient(135deg,#fffde7 60%,#ffd54f 100%);
-      opacity: 0.16;
-      z-index: 0;
-      transition: opacity 0.2s;
+    .nav a#adminLink { background-color: #8e24aa; }
+    .nav a#contestsLink { background-color: #1e88e5; }
+    .nav a#scoresLink { background-color: #43a047; }
+    .nav a#loginLink { background-color: #ff9800; color: #fff; font-weight: bold; }
+    .nav a#logoutLink { background-color: #d32f2f; }
+    .nav a#honorLink { background-color: #ff9800; color:#004aad; font-weight:bold;}
+    .nav a:hover { background-color: #0056b3; }
+    .nav a#adminLink:hover { background-color: #5e1972; }
+    .nav a#contestsLink:hover { background-color: #1565c0; }
+    .nav a#scoresLink:hover { background-color: #1b5e20; }
+    .nav a#loginLink:hover { background-color: #e65100; }
+    .nav a#logoutLink:hover { background-color: #b71c1c; }
+    .nav a#honorLink:hover { background-color: #e65100; color:#fff;}
+    @media (max-width: 600px) {
+      .nav { max-width: 99vw; }
+      .nav a { font-size: 13px; min-width: 99vw; }
     }
-    .nav-grid a:hover, .nav-grid a:focus {
-      background: linear-gradient(90deg,#43a047 40%, #1976d2 100%);
-      color: #fffde7;
-      box-shadow: 0 2px 20px #ffd54f88;
-      transform: scale(1.03) translateY(-2px);
-      text-shadow: 0 2px 12px #fff5;
-    }
-    /* تخصيص ألوان وخصائص لكل زر لو تحتاج */
-    .nav-grid a#adminLink { background: linear-gradient(90deg,#8e24aa 70%, #1976d2 100%);}
-    .nav-grid a#contestsLink { background: linear-gradient(90deg,#1e88e5 60%, #ffd54f 100%); color: #004aad; font-weight: 900;}
-    .nav-grid a#scoresLink { background: linear-gradient(90deg,#43a047 70%, #ffd54f 100%); color: #fff;}
-    .nav-grid a#honorLink { background: linear-gradient(90deg,#ff9800 65%, #ffd54f 100%); color: #004aad; font-weight: 900;}
-    .nav-grid a#loginLink { background: linear-gradient(90deg,#ffd54f 60%, #ff9800 100%); color: #004aad; font-weight: 900;}
-    /* توزيع الصف الثاني: نضيف div فاصل فقط في أول خلية للصف الثاني */
-    .nav-grid .spacer { grid-row: 2; grid-column: 1 / 2; background: none; box-shadow: none; pointer-events: none; }
 
-    @media (max-width: 850px) {
-      .nav-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, auto);}
-      .nav-grid a, .nav-grid .spacer { grid-column: auto !important; grid-row: auto !important;}
-    }
-    @media (max-width: 700px) {
-      .nav-grid { grid-template-columns: 1fr; grid-template-rows: repeat(7, auto);}
-      .nav-grid a, .nav-grid .spacer { grid-column: auto !important; grid-row: auto !important;}
-      .kenz-logo { width: 70px; height: 70px;}
-      .kenz-logo img { width: 65px; height: 65px;}
-      header h1 { font-size: 1.3em; }
-      header h2 { font-size: 1.07em; }
-      .nav-grid a { font-size: 0.98em; padding: 10px 0;}
-    }
-    @media (max-width: 450px) {
-      .nav-grid { grid-template-columns: 1fr; }
-    }
     /* باقي التنسيقات كما هي ... */
     .table-container {
       flex: 1 0 auto;
@@ -302,21 +262,15 @@
     <h1>مخيم كمبوند كنز الصيفي</h1>
     <h2>🎖️ الكل رابح 🎖️</h2>
   </header>
-  <div class="nav-grid">
-    <!-- الصف الأول 4 أزرار -->
+  <div class="nav">
     <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين</a>
     <a href="admin-contests.html" id="contestsLink" style="display:none">🏆 إدارة المسابقات</a>
     <a href="admin-scores.html" id="scoresLink" style="display:none">📝 تسجيل النقاط</a>
     <a href="honor-board.html" id="honorLink" style="display:none">🏆 لوحة الشرف</a>
-    <!-- الصف الثاني: div فارغ (spacer) ثم 3 أزرار -->
-    <div class="spacer"></div>
     <a href="participant-scores.html" id="queryScoresLink">🔍 استعلام عن النقاط</a>
     <a href="schedule.html">📅 الجدول الزمني</a>
     <a href="login.html" id="loginLink">دخول المشرفين</a>
-  </div>
-  <!-- زر تسجيل خروج خارج شبكة الأزرار (أسفل الشبكة) -->
-  <div style="text-align:center; margin-top:10px;">
-    <a href="#" onclick="adminLogout()" id="logoutLink" style="display:none; background: linear-gradient(90deg,#d32f2f 70%, #ffd54f 100%); color: #fff; border-radius:10px; padding:10px 24px; font-size:1.15em; font-weight:700; text-decoration:none; box-shadow: 0 1px 8px #ffd54f22;">تسجيل خروج</a>
+    <a href="#" onclick="adminLogout()" id="logoutLink" style="display:none">تسجيل خروج</a>
   </div>
   <div class="table-container">
     <h2>قائمة المشاركين</h2>
