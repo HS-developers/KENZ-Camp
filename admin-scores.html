@@ -115,21 +115,20 @@
     .logout-btn {background:#d32f2f;color:white;padding:8px 18px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;margin:6px 0;}
     .logout-btn:hover {background:#b71c1c;}
     footer {
-      background: #e3f2fd;
-      box-shadow: 0 -1px 4px #0001;
-      border-radius: 0 0 12px 12px;
-      font-size: 14px;
-      color: #004aad;
-      font-family: 'Cairo', sans-serif;
-      text-align: center;
-      padding: 14px 10px 14px 10px;
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      z-index: 100;
-      margin: 0;
-    }
+  background: linear-gradient(90deg,#e3f2fd 70%, #ffd54f 100%);
+  font-size: 15px;
+  color: #004aad;
+  font-family: 'Cairo', sans-serif;
+  text-align: center;
+  padding: 14px 10px 11px 10px;
+  border-radius: 0 0 16px 16px;
+  width: 100%;
+  margin: 0;
+  flex-shrink: 0;
+  box-shadow: 0 -1px 14px #ffd54f44;
+  letter-spacing: 1px;
+  z-index: 10;
+}
     @media (max-width: 900px) {
       .container { max-width: 98vw; padding: 20px 3vw; }
       .contest-select-bar select { min-width: 140px; font-size: 16px; padding: 10px 20px; }
@@ -180,7 +179,7 @@
     <div class="status-msg" id="statusMsg"></div>
   </div>
   <footer>
-    All Right Reserved © 2025 Genius Tech Co
+  جميع الحقوق محفوظة © 2025 Genius Tech Co
   </footer>
   <script type="module">
     // Firebase imports and config
