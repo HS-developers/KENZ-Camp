@@ -237,7 +237,7 @@
     const scoresTableWrap = document.getElementById("scoresTableWrap");
     const msgBox = document.getElementById("msgBox");
 
-    // جلب بيانات المسابقات
+    // جلب بيانات المسابقات (مع المشاركين)
     async function getContests() {
       const contestsSnap = await getDocs(collection(db, "contests"));
       let contests = [];
@@ -248,6 +248,7 @@
           name: data.name || docSnap.id,
           startDate: data.startDate || "",
           endDate: data.endDate || "",
+          participants: data.participants || []
         });
       });
       return contests;
@@ -310,21 +311,22 @@
       // جلب نقاطه في كل المسابقات
       const scoresPerContest = await getScoresForAllContests(contests);
 
-      // بناء صفوف المسابقات التي شارك فيها فقط
+      // بناء صفوف كل المسابقات التي يشارك بها حتى لو لم تُسجل له نقاط
       let contestRows = [];
       let userTotal = 0;
       let totalPossible = 0;
       contests.forEach(c => {
-        let userPoints = scoresPerContest[c.id][participant.participantNumber];
-        if (typeof userPoints === "number") {
+        // تحقق أن المشارك ضمن مصفوفة المشاركين في المسابقة
+        if (Array.isArray(c.participants) && c.participants.includes(participant.participantNumber)) {
+          let userPoints = scoresPerContest[c.id]?.[participant.participantNumber];
           contestRows.push({
             name: c.name,
             startDate: c.startDate,
             endDate: c.endDate,
-            userPoints
+            userPoints: typeof userPoints === "number" ? userPoints : null // null لو لم تسجل بعد
           });
-          userTotal += userPoints;
           totalPossible += 10;
+          if (typeof userPoints === "number") userTotal += userPoints;
         }
       });
 
@@ -351,7 +353,7 @@
           <td>${row.startDate}</td>
           <td>${row.endDate}</td>
           <td>10</td>
-          <td>${row.userPoints}</td>
+          <td>${row.userPoints !== null ? row.userPoints : "<span style='color:#d32f2f;font-weight:bold'>لم تسجل بعد</span>"}</td>
         </tr>`;
       });
 
