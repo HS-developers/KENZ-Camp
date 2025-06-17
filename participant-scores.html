@@ -3,22 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <title>استعلام عن النقاط - مخيم كنز</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
   <style>
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
-      font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, #e3f2fd 0%, #fffde7 100%);
+      font-family: Cairo, sans-serif;
+      background: #f4f4f4;
       box-sizing: border-box;
     }
     body {
       min-height: 100vh;
-      min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 56px;
     }
     header {
       text-align: center;
@@ -29,7 +27,6 @@
       position: relative;
       z-index: 1;
     }
-    
     header h1 {
       margin: 0 0 2px 0;
       font-size: 2.2em;
@@ -47,22 +44,8 @@
       letter-spacing: 1px;
     }
     .nav {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      align-items: stretch;
-      width: 100%;
-      max-width: 540px;
-      margin: 24px auto 0 auto;
-    }
-     .nav {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      max-width: 700px;
-      margin: 16px auto 16px auto;
+      display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 10px;
+      max-width: 700px; margin: 16px auto 16px auto;
     }
     .nav a {
       background-color: #007bff; color: white; padding: 10px; text-align: center;
@@ -82,182 +65,88 @@
     .nav a#loginLink:hover { background-color: #e65100; }
     .nav a#logoutLink:hover { background-color: #b71c1c; }
     .nav a#honorLink:hover { background-color: #e65100; color:#fff;}
-    @media (max-width: 600px) {
-      .nav { max-width: 99vw; }
-      .nav a { font-size: 13px; min-width: 99vw; }
+    .container {max-width:900px;margin:30px auto 18px;background:#fff;border-radius:12px;box-shadow:0 2px 10px #0001;padding:30px 16px;}
+    h2 {text-align:center;}
+    .back-home {text-align:right; margin: 15px 0;}
+    .back-home a {
+      background:#007bff;color:white;padding:8px 18px;text-decoration:none;border-radius:8px;font-weight:bold;
+      display:inline-block;
     }
-      justify-items: stretch;
-    }
-    .nav > a {
-      min-width: 0;
-    }
-    .nav .spacer {
-      pointer-events: none;
-      background: transparent;
-      box-shadow: none;
-      border: none;
-      visibility: hidden;
-    }
-    @media (max-width: 900px) {
-      .nav { max-width: 99vw; }
-      .container { max-width: 98vw; padding: 20px 3vw; }
-    }
-    @media (max-width: 700px) {
-      .nav { grid-template-columns: repeat(2, 1fr); gap: 11px; }
-      .kenz-logo { width: 70px; height: 70px;}
-      .kenz-logo img { width: 65px; height: 65px;}
-      header h1 { font-size: 1.3em; }
-      header h2 { font-size: 1.07em; }
-      .nav a { font-size: 0.98em; padding: 10px 0;}
-      th, td { font-size: 0.98em; padding: 8px 4px;}
-      .container { padding: 11px 1vw 18px 1vw; }
-    }
-    @media (max-width: 450px) {
-      .nav { grid-template-columns: 1fr; }
-    }
-    .container {
-      flex: 0 0 auto;
-      max-width: 750px;
-      margin: 34px auto 18px auto;
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 2px 16px #0002;
-      padding: 36px 20px 32px 20px;
-      min-height: unset;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-    }
-    .search-bar {
+    .back-home a:hover {background:#0056b3;}
+    .score-query-form {
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 25px;
     }
-    .search-bar input {
-      padding: 13px 14px;
-      font-size: 23px;
+    .score-query-form input[type="text"] {
+      font-size: 18px;
+      padding: 7px 10px;
       border-radius: 8px;
-      border: 1.5px solid #bcd7fc;
-      width: 80%;
-      max-width: 350px;
-      background: #f8fbff;
-      margin-left: 7px;
-      outline: none;
-      transition: border 0.2s;
-      box-shadow: 0 1px 2px #0001;
+      border: 1px solid #ccc;
+      width: 150px;
+      text-align: center;
+      margin-left: 12px;
     }
-    .search-bar input:focus {
-      border: 1.5px solid #004aad;
-      background: #f2f8ff;
-    }
-    .search-bar button {
-      padding: 12px 26px;
+    .score-query-form button {
+      padding: 7px 30px;
       font-size: 17px;
-      background: #43a047;
+      border-radius: 8px;
+      background: #1976d2;
       color: #fff;
       border: none;
-      border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
-      box-shadow: 0 1px 4px #0001;
-      margin-right: 6px;
-      transition: background 0.16s;
-      letter-spacing: 1px;
+      margin-right: 8px;
     }
-    .search-bar button:hover {
-      background: #25762e;
+    .score-query-form button:hover {
+      background: #1565c0;
     }
-    #scoresTableWrap {
-      margin-top: 10px;
-      margin-bottom: 15px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 1px 8px #0001;
-      overflow: hidden;
-    }
-    th, td {
-      padding: 16px 8px;
-      border-bottom: 1px solid #e3f2fd;
-      text-align: center;
-      font-size: 17px;
-    }
-    th {
-      background: #e3f2fd;
-      font-weight: bold;
-      letter-spacing: 1px;
-      color: #004aad;
-      font-size: 18px;
-    }
-    tr.total-row {
-      background: #ffe082 !important;
-      font-weight: bold;
-    }
-    tr:nth-child(even) {
-      background: #f9f9f9;
-    }
-    .msg {
-      text-align: center;
-      color: #d32f2f;
-      font-size: 19px;
-      margin: 28px 0 10px 0;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
+    .results-table {width:100%;border-collapse:collapse;margin: 0 0 28px 0;}
+    .results-table th, .results-table td {padding:10px 6px;border-bottom:1px solid #ddd;text-align:center;font-size:16px;}
+    .results-table th {background:#e3f2fd;}
+    .results-table tr:nth-child(even) {background:#f9f9f9;}
+    .results-table .negative {color:#c62828;}
+    .results-table .zero {color:#bdbdbd;}
+    .results-table .positive {color:#2e7d32;}
+    .status-msg {text-align:center;margin:12px 0;font-size:16px;}
+    .status-msg.ok {color:#43a047;}
+    .status-msg.err {color:#d32f2f;}
     footer {
       background: linear-gradient(90deg,#e3f2fd 70%, #ffd54f 100%);
-      box-shadow: 0 -1px 4px #0001;
-      border-radius: 0 0 12px 12px;
       font-size: 9px;
       color: #004aad;
       font-family: 'Cairo', sans-serif;
       text-align: center;
-      padding: 14px 10px 14px 10px;
-      position: fixed;
-      left: 0;
-      bottom: 0;
+      padding: 14px 10px 11px 10px;
+      border-radius: 0 0 16px 16px;
       width: 100%;
-      z-index: 100;
       margin: 0;
+      flex-shrink: 0;
+      box-shadow: 0 -1px 14px #ffd54f44;
+      letter-spacing: 1px;
+      z-index: 10;
+      margin-top: auto;
+    }
+    @media (max-width: 900px) {
+      .container { max-width: 98vw; padding: 20px 3vw; }
+    }
+    @media (max-width: 600px) {
+      header h1 { font-size: 23px; }
+      header h2 { font-size: 17px; }
+      .container {
+        padding: 11px 1vw 18px 1vw;
+        margin: 14px auto 12px auto;
+        min-height: unset;
+        box-shadow: 0 1px 6px #0001;
+      }
+      .results-table th, .results-table td { font-size: 13px; padding: 8px 3px; }
+      .results-table th { font-size: 14px; }
+      .back-home a { font-size: 13px; padding: 7px 9px; }
+      .status-msg { font-size: 14px; }
+      body { padding-bottom: 0; }
     }
   </style>
-  <script>
-    // Center last row buttons in .nav grid if row is not full (pure JS, no dependencies)
-    document.addEventListener('DOMContentLoaded', function () {
-      const nav = document.querySelector('.nav');
-      if (!nav) return;
-      function centerLastRow() {
-        nav.querySelectorAll('.spacer').forEach(e=>e.remove());
-        const cols = getComputedStyle(nav).gridTemplateColumns.split(' ').length;
-        const btns = Array.from(nav.children).filter(el => el.tagName === 'A');
-        const remainder = btns.length % cols;
-        if (remainder !== 0 && cols > 1) {
-          const needed = cols - remainder;
-          const half = Math.floor(needed/2);
-          for(let i=0; i<half; i++) {
-            const sp = document.createElement('a');
-            sp.className = 'spacer';
-            nav.appendChild(sp);
-          }
-          for(let i=half; i<needed; i++) {
-            const sp = document.createElement('a');
-            sp.className = 'spacer';
-            nav.appendChild(sp);
-          }
-        }
-      }
-      centerLastRow();
-      window.addEventListener('resize', centerLastRow);
-    });
-  </script>
 </head>
 <body>
   <header>
-    <div class="kenz-logo">
-      <img src="logo.png" alt="شعار مخيم كنز" onerror="this.style.display='none'">
-    </div>
     <h1>مخيم كنز الصيفي</h1>
     <h2>🔍 استعلام عن النقاط 🔍</h2>
   </header>
@@ -269,15 +158,19 @@
     <a href="participant-scores.html" id="queryScoresLink">🔍 استعلام عن النقاط</a>
     <a href="schedule.html">📅 الجدول الزمني</a>
     <a href="login.html" id="loginLink">دخول المشرفين</a>
-    <a href="#" onclick="adminLogout()" id="logoutLink" style="display:none">تسجيل خروج</a>
+    <a href="#" id="logoutLink" class="logout-btn" style="display:none" onclick="adminLogout()">تسجيل الخروج</a>
   </div>
   <div class="container">
-    <div class="search-bar">
-      <input type="text" id="partNumInput" placeholder="أدخل رقم المشارك أو الاسم..." />
-      <button id="searchBtn">بحث</button>
+    <div class="back-home">
+      <a href="index.html">🏠 العودة للرئيسية</a>
     </div>
-    <div id="scoresTableWrap"></div>
-    <div class="msg" id="msgBox" style="display:none"></div>
+    <form class="score-query-form" id="scoreQueryForm">
+      <label for="participantNumber">رقم المشارك:</label>
+      <input type="text" id="participantNumber" required maxlength="10" autocomplete="off" />
+      <button type="submit">استعلام</button>
+    </form>
+    <div class="status-msg" id="statusMsg"></div>
+    <div id="resultsArea"></div>
   </div>
   <footer>
     جميع الحقوق محفوظة © 2025 Genius Tech Co
@@ -292,173 +185,161 @@
       projectId: "kenz-camp",
     };
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    // Navbar display logic
+    // NAV & AUTH
     function handleNavDisplay(user) {
-      document.getElementById("adminLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("contestsLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("scoresLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("honorLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("logoutLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("loginLink").style.display = user ? "none" : "inline-block";
+      var logoutEl = document.getElementById("logoutLink");
+      if (user) {
+        document.getElementById("adminLink").style.display = "inline-block";
+        document.getElementById("contestsLink").style.display = "inline-block";
+        document.getElementById("scoresLink").style.display = "inline-block";
+        document.getElementById("honorLink").style.display = "inline-block";
+        if (logoutEl) logoutEl.style.display = "inline-block";
+        document.getElementById("loginLink").style.display = "none";
+      } else {
+        document.getElementById("adminLink").style.display = "none";
+        document.getElementById("contestsLink").style.display = "none";
+        document.getElementById("scoresLink").style.display = "none";
+        document.getElementById("honorLink").style.display = "none";
+        if (logoutEl) logoutEl.style.display = "none";
+        document.getElementById("loginLink").style.display = "inline-block";
+      }
     }
-    onAuthStateChanged(auth, (user) => handleNavDisplay(user));
+    onAuthStateChanged(auth, handleNavDisplay);
+
     window.adminLogout = function() {
-      signOut(auth);
-    };
+      signOut(auth).then(() => { window.location.href = "login.html"; });
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      handleNavDisplay(auth.currentUser);
+    });
 
-    const searchBtn = document.getElementById("searchBtn");
-    const partNumInput = document.getElementById("partNumInput");
-    const scoresTableWrap = document.getElementById("scoresTableWrap");
-    const msgBox = document.getElementById("msgBox");
+    // تحميل كل المسابقات ودرجات المشارك
+    let allContests = [];
+    let allScores = {};
+    let participantData = null;
 
-    // جلب بيانات المسابقات (مع المشاركين)
-    async function getContests() {
+    async function loadContestsAndScores() {
+      // تحميل كل المسابقات
       const contestsSnap = await getDocs(collection(db, "contests"));
-      let contests = [];
+      allContests = [];
       contestsSnap.forEach(docSnap => {
-        const data = docSnap.data();
-        contests.push({
+        const d = docSnap.data();
+        allContests.push({
           id: docSnap.id,
-          name: data.name || docSnap.id,
-          startDate: data.startDate || "",
-          endDate: data.endDate || "",
-          participants: data.participants || []
+          name: d.name || docSnap.id,
+          startDate: d.startDate,
+          endDate: d.endDate,
+          requiredPoints: (typeof d.requiredPoints === "number" ? d.requiredPoints : Number(d.requiredPoints))
         });
       });
-      return contests;
-    }
 
-    // جلب بيانات المشاركين
-    async function getParticipants() {
-      const snap = await getDocs(collection(db, "participants"));
-      let participants = [];
-      snap.forEach(docSnap => {
-        let d = docSnap.data();
-        participants.push(d);
-      });
-      return participants;
-    }
-
-    // جلب نتائج كل مسابقة
-    async function getScoresForAllContests(contests) {
-      let scoresPerContest = {};
-      for (const c of contests) {
-        const scoreSnap = await getDoc(doc(db, "contestScores", c.id));
-        scoresPerContest[c.id] = (scoreSnap.exists() && scoreSnap.data().scores) ? scoreSnap.data().scores : {};
-      }
-      return scoresPerContest;
-    }
-
-    // بناء جدول المسابقات للمشارك
-    async function buildParticipantScoresTable(query) {
-      msgBox.style.display = "none";
-      scoresTableWrap.innerHTML = "<div style='text-align:center;margin:25px 0;font-size:16px;'>جارٍ التحميل...</div>";
-
-      const contests = await getContests();
-      const participants = await getParticipants();
-
-      if (!contests.length) {
-        scoresTableWrap.innerHTML = "";
-        msgBox.textContent = "لا يوجد مسابقات بعد.";
-        msgBox.style.display = "block";
-        return;
-      }
-      if (!participants.length) {
-        scoresTableWrap.innerHTML = "";
-        msgBox.textContent = "لا يوجد مشاركين بعد.";
-        msgBox.style.display = "block";
-        return;
-      }
-
-      // فلترة المشارك
-      let participant = participants.find(p =>
-        (p.participantNumber && p.participantNumber.toString().includes(query)) ||
-        (p.name && p.name.includes(query))
-      );
-      if (!participant) {
-        scoresTableWrap.innerHTML = "";
-        msgBox.textContent = "لم يتم العثور على مشارك.";
-        msgBox.style.display = "block";
-        return;
-      }
-
-      // جلب نقاطه في كل المسابقات
-      const scoresPerContest = await getScoresForAllContests(contests);
-
-      // بناء صفوف كل المسابقات التي يشارك بها حتى لو لم تُسجل له نقاط
-      let contestRows = [];
-      let userTotal = 0;
-      let totalPossible = 0;
-      contests.forEach(c => {
-        if (Array.isArray(c.participants) && c.participants.includes(participant.participantNumber)) {
-          let userPoints = scoresPerContest[c.id]?.[participant.participantNumber];
-          contestRows.push({
-            name: c.name,
-            startDate: c.startDate,
-            endDate: c.endDate,
-            userPoints: typeof userPoints === "number" ? userPoints : null
-          });
-          totalPossible += 10;
-          if (typeof userPoints === "number") userTotal += userPoints;
+      // تحميل كل الدرجات للمسابقات
+      allScores = {};
+      for (const contest of allContests) {
+        const scoreSnap = await getDoc(doc(db, "contestScores", contest.id));
+        if (scoreSnap.exists() && scoreSnap.data().scores) {
+          allScores[contest.id] = scoreSnap.data().scores;
+        } else {
+          allScores[contest.id] = {};
         }
-      });
-
-      if (!contestRows.length) {
-        scoresTableWrap.innerHTML = `<div style='text-align:center;margin:30px 0;font-size:17px;'>${participant.name}<br>لم يشارك في أي مسابقة بعد.</div>`;
-        return;
       }
-
-      // بناء الجدول مع عمود تاريخ البداية والنهاية بعد اسم المسابقة
-      let thead = `<thead>
-        <tr>
-          <th>اسم المسابقة</th>
-          <th>تاريخ البداية</th>
-          <th>تاريخ النهاية</th>
-          <th>النقاط الكلية للمسابقة</th>
-          <th>النقاط التي حصل عليها</th>
-        </tr>
-      </thead>`;
-
-      let tbody = "";
-      contestRows.forEach(row => {
-        tbody += `<tr>
-          <td>${row.name}</td>
-          <td>${row.startDate}</td>
-          <td>${row.endDate}</td>
-          <td>10</td>
-          <td>${row.userPoints !== null ? row.userPoints : "<span style='color:#d32f2f;font-weight:bold'>لم تسجل بعد</span>"}</td>
-        </tr>`;
-      });
-
-      // صف الإجمالي في آخر الجدول
-      tbody += `<tr class="total-row">
-        <td>الإجمالي</td>
-        <td colspan="2"></td>
-        <td><b>${totalPossible}</b></td>
-        <td><b>${userTotal}</b></td>
-      </tr>`;
-
-      scoresTableWrap.innerHTML = `
-        <div style="margin-bottom:10px;text-align:center;font-size:20px;font-weight:bold;">${participant.name} (${participant.participantNumber})</div>
-        <div style="overflow-x:auto">
-          <table>${thead}<tbody>${tbody}</tbody></table>
-        </div>
-      `;
     }
 
-    // البحث
-    searchBtn.onclick = () => {
-      buildParticipantScoresTable(partNumInput.value.trim());
-    };
-    partNumInput.onkeydown = (e) => {
-      if(e.key === "Enter") buildParticipantScoresTable(partNumInput.value.trim());
-    };
+    async function getParticipantData(participantNumber) {
+      // ابحث عن بيانات المشارك
+      const snap = await getDocs(collection(db, "participants"));
+      let found = null;
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        if (d.participantNumber === participantNumber) found = d;
+      });
+      return found;
+    }
 
-    // عرض فارغ عند فتح الصفحة
-    scoresTableWrap.innerHTML = "";
+    function renderResults(participantNumber) {
+      const resultsArea = document.getElementById("resultsArea");
+      let html = "";
+
+      // بيانات المشارك
+      html += `<div style="text-align:center;margin-bottom:18px;">
+        <strong>الاسم:</strong> ${participantData ? participantData.name : "-"} &nbsp; | &nbsp;
+        <strong>رقم المشارك:</strong> ${participantNumber}
+      </div>`;
+
+      html += `<table class="results-table">
+        <thead>
+          <tr>
+            <th>اسم المسابقة</th>
+            <th>من</th>
+            <th>إلى</th>
+            <th>النقاط الكلية</th>
+            <th>نقاطك</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+
+      let hasAnyScore = false;
+
+      for (const contest of allContests) {
+        const score = (allScores[contest.id] && allScores[contest.id][participantNumber] !== undefined)
+          ? allScores[contest.id][participantNumber]
+          : "";
+        // لا تعرض المسابقات التي ليس للمشارك فيها نقاط
+        if (score === "") continue;
+        hasAnyScore = true;
+
+        // تنسيق لون النقاط
+        let scoreClass = "";
+        if (score < 0) scoreClass = "negative";
+        else if (score == 0) scoreClass = "zero";
+        else scoreClass = "positive";
+
+        // عرض النقاط الكلية للمسابقة كما هي من قاعدة البيانات (حتى لو 0)
+        html += `<tr>
+          <td>${contest.name}</td>
+          <td>${contest.startDate}</td>
+          <td>${contest.endDate}</td>
+          <td>${typeof contest.requiredPoints === "number" ? contest.requiredPoints : ""}</td>
+          <td class="${scoreClass}">${score}</td>
+        </tr>`;
+      }
+
+      html += `</tbody></table>`;
+
+      if (!hasAnyScore) {
+        html += `<div style="text-align:center; color:#d32f2f; font-size:17px;">لا توجد نتائج لهذا المشارك حتى الآن.</div>`;
+      }
+
+      resultsArea.innerHTML = html;
+    }
+
+    // معالجة الاستعلام
+    document.getElementById("scoreQueryForm").onsubmit = async function(e) {
+      e.preventDefault();
+      const participantNumber = document.getElementById("participantNumber").value.trim();
+      document.getElementById("statusMsg").textContent = "";
+      document.getElementById("resultsArea").innerHTML = "";
+      if (!participantNumber) {
+        document.getElementById("statusMsg").textContent = "يرجى إدخال رقم المشارك";
+        document.getElementById("statusMsg").className = "status-msg err";
+        return;
+      }
+      document.getElementById("statusMsg").textContent = "جارٍ التحميل...";
+      document.getElementById("statusMsg").className = "status-msg";
+      await loadContestsAndScores();
+      participantData = await getParticipantData(participantNumber);
+      if (!participantData) {
+        document.getElementById("statusMsg").textContent = "رقم المشارك غير صحيح أو غير موجود";
+        document.getElementById("statusMsg").className = "status-msg err";
+        return;
+      }
+      document.getElementById("statusMsg").textContent = "";
+      renderResults(participantNumber);
+    };
   </script>
 </body>
 </html>
