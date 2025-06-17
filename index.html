@@ -88,6 +88,34 @@
       text-shadow: 0 1px 4px #1976d299;
       letter-spacing: 1px;
     }
+
+    /* تحسين الهيدر للموبايل: يبقى أفقي دائمًا */
+    @media (max-width: 700px) {
+      .kenz-logo { width: 65px; height: 65px;}
+      .header-row { gap: 11px; }
+      header h1 { font-size: 1.3em; }
+      header h2 { font-size: 1.07em; }
+    }
+    @media (max-width: 500px) {
+      .header-row { 
+        flex-direction: row; 
+        align-items: center;
+        gap: 7px;
+      }
+      .header-title { 
+        text-align: right; 
+        padding-right: 6px; 
+      }
+      .kenz-logo { 
+        width: 40px; 
+        height: 40px; 
+        margin: 0 0 0 5px; 
+      }
+      header h1 { font-size: 1em; }
+      header h2 { font-size: .93em; }
+      header { padding: 13px 2px 8px 2px; border-radius: 0 0 10px 10px; }
+    }
+
     .main-content {
       flex: 1 0 auto;
       max-width: 540px;
@@ -266,22 +294,6 @@
         padding-right: 2vw;
         box-sizing: border-box;
       }
-    }
-    @media (max-width: 700px) {
-      .nav { grid-template-columns: repeat(2, 1fr); gap: 11px; }
-      .kenz-logo { width: 65px; height: 65px;}
-      .header-row { gap: 11px; }
-      header h1 { font-size: 1.3em; }
-      header h2 { font-size: 1.07em; }
-      .nav a { font-size: 0.98em; padding: 10px 0;}
-    }
-    @media (max-width: 500px) {
-      .header-row { flex-direction: column-reverse; align-items: flex-end; gap: 8px;}
-      .kenz-logo { margin: 0 0 0 0; width: 45px; height: 45px; }
-      .header-title { text-align: right; padding-right: 7px; }
-      header { padding: 18px 3px 10px 3px; border-radius: 0 0 14px 14px; }
-      header h1 { font-size: 1em; }
-      header h2 { font-size: .96em; }
     }
     @media (max-width: 450px) {
       .main-content, .nav {
