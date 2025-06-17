@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>استعلام عن النقاط - مخيم كنز</title>
+  <title>تسجيل النقاط - مخيم كنز</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
   <style>
     html, body {
@@ -73,42 +73,41 @@
       display:inline-block;
     }
     .back-home a:hover {background:#0056b3;}
-    .score-query-form {
+    .scores-table {width:100%;border-collapse:collapse;margin-bottom:20px;}
+    .scores-table th, .scores-table td {padding:10px 6px;border-bottom:1px solid #ddd;text-align:center;font-size:16px;}
+    .scores-table th {background:#e3f2fd;}
+    .scores-table tr:nth-child(even) {background:#f9f9f9;}
+    .scores-table input[type="number"] {width: 70px;padding:4px 2px;font-size:15px;text-align:center;}
+    .scores-table input[type="text"] {width: 140px;padding:4px 2px;font-size:15px;text-align:center;}
+    .btn-save {background:#43a047;color:#fff;border:none;padding:10px 25px;font-size:16px;border-radius:8px;cursor:pointer;margin:8px 0;}
+    .btn-save:hover {background:#25762e;}
+    .contest-select-bar {
+      margin: 0 auto 30px auto;
       text-align: center;
-      margin-bottom: 25px;
+      padding: 16px 0;
     }
-    .score-query-form input[type="text"] {
-      font-size: 18px;
-      padding: 7px 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      width: 150px;
-      text-align: center;
-      margin-left: 12px;
+    .contest-select-bar label {font-weight: bold;font-size: 18px;margin-left: 10px;}
+    .contest-select-bar select {
+      padding: 12px 40px;
+      border-radius: 12px;
+      font-size: 19px;
+      border: 1.5px solid #bcd7fc;
+      background: #f8fbff;
+      min-width: 220px;
+      margin-right: 7px;
+      transition: border 0.2s;
+      box-shadow: 0 1px 2px #0001;
+      outline: none;
     }
-    .score-query-form button {
-      padding: 7px 30px;
-      font-size: 17px;
-      border-radius: 8px;
-      background: #1976d2;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      margin-right: 8px;
+    .contest-select-bar select:focus {
+      border: 1.5px solid #004aad;
+      background: #f2f8ff;
     }
-    .score-query-form button:hover {
-      background: #1565c0;
-    }
-    .results-table {width:100%;border-collapse:collapse;margin: 0 0 28px 0;}
-    .results-table th, .results-table td {padding:10px 6px;border-bottom:1px solid #ddd;text-align:center;font-size:16px;}
-    .results-table th {background:#e3f2fd;}
-    .results-table tr:nth-child(even) {background:#f9f9f9;}
-    .results-table .negative {color:#c62828;}
-    .results-table .zero {color:#bdbdbd;}
-    .results-table .positive {color:#2e7d32;}
     .status-msg {text-align:center;margin:12px 0;font-size:16px;}
     .status-msg.ok {color:#43a047;}
     .status-msg.err {color:#d32f2f;}
+    .logout-btn {background:#d32f2f;color:white;padding:8px 18px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block;margin:6px 0;}
+    .logout-btn:hover {background:#b71c1c;}
     footer {
       background: linear-gradient(90deg,#e3f2fd 70%, #ffd54f 100%);
       font-size: 9px;
@@ -127,6 +126,7 @@
     }
     @media (max-width: 900px) {
       .container { max-width: 98vw; padding: 20px 3vw; }
+      .contest-select-bar select { min-width: 140px; font-size: 16px; padding: 10px 20px; }
     }
     @media (max-width: 600px) {
       header h1 { font-size: 23px; }
@@ -137,10 +137,12 @@
         min-height: unset;
         box-shadow: 0 1px 6px #0001;
       }
-      .results-table th, .results-table td { font-size: 13px; padding: 8px 3px; }
-      .results-table th { font-size: 14px; }
+      .scores-table th, .scores-table td { font-size: 13px; padding: 8px 3px; }
+      .scores-table th { font-size: 14px; }
       .back-home a { font-size: 13px; padding: 7px 9px; }
       .status-msg { font-size: 14px; }
+      .contest-select-bar label { font-size: 15px; }
+      .contest-select-bar select { min-width: 110px; font-size: 15px; padding: 9px 12px; }
       body { padding-bottom: 0; }
     }
   </style>
@@ -148,7 +150,7 @@
 <body>
   <header>
     <h1>مخيم كنز الصيفي</h1>
-    <h2>🔍 استعلام عن النقاط 🔍</h2>
+    <h2>📝 تسجيل النقاط 📝</h2>
   </header>
   <div class="nav">
     <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين</a>
@@ -164,21 +166,21 @@
     <div class="back-home">
       <a href="index.html">🏠 العودة للرئيسية</a>
     </div>
-    <form class="score-query-form" id="scoreQueryForm">
-      <label for="participantNumber">رقم المشارك:</label>
-      <input type="text" id="participantNumber" required maxlength="10" autocomplete="off" />
-      <button type="submit">استعلام</button>
-    </form>
+    <div class="contest-select-bar">
+      <label for="contestSelect">اختر المسابقة:</label>
+      <select id="contestSelect"><option value="">-- اختر --</option></select>
+    </div>
+    <div id="scoresArea"></div>
     <div class="status-msg" id="statusMsg"></div>
-    <div id="resultsArea"></div>
   </div>
   <footer>
     جميع الحقوق محفوظة © 2025 Genius Tech Co
   </footer>
   <script type="module">
+    // Firebase imports and config
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     const firebaseConfig = {
       apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
       authDomain: "kenz-camp.firebaseapp.com",
@@ -216,131 +218,159 @@
       handleNavDisplay(auth.currentUser);
     });
 
-    // تحميل كل المسابقات ودرجات المشارك
+    // المسابقات والمشاركين
     let allContests = [];
-    let allScores = {};
-    let participantData = null;
+    let allParticipants = {};
+    let selectedContestName = "";
 
-    async function loadContestsAndScores() {
-      // تحميل كل المسابقات
-      const contestsSnap = await getDocs(collection(db, "contests"));
+    async function loadContests() {
+      const snap = await getDocs(collection(db, "contests"));
       allContests = [];
-      contestsSnap.forEach(docSnap => {
-        const d = docSnap.data();
-        // احتفظ بكل المعلومات الضرورية
-        allContests.push({
-          id: docSnap.id,
-          name: d.name || docSnap.id,
-          startDate: d.startDate,
-          endDate: d.endDate,
-          requiredPoints: (typeof d.requiredPoints === "number" ? d.requiredPoints : Number(d.requiredPoints))
-        });
-      });
-
-      // تحميل كل الدرجات للمسابقات
-      allScores = {};
-      for (const contest of allContests) {
-        const scoreSnap = await getDoc(doc(db, "contestScores", contest.id));
-        if (scoreSnap.exists() && scoreSnap.data().scores) {
-          allScores[contest.id] = scoreSnap.data().scores;
-        } else {
-          allScores[contest.id] = {};
-        }
-      }
-    }
-
-    async function getParticipantData(participantNumber) {
-      // ابحث عن بيانات المشارك
-      const snap = await getDocs(collection(db, "participants"));
-      let found = null;
+      const select = document.getElementById("contestSelect");
       snap.forEach(docSnap => {
         const d = docSnap.data();
-        if (d.participantNumber === participantNumber) found = d;
+        allContests.push({id: docSnap.id, name: d.name || docSnap.id});
       });
-      return found;
+      allContests.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c.id;
+        opt.textContent = c.name;
+        select.appendChild(opt);
+      });
     }
 
-    function renderResults(participantNumber) {
-      const resultsArea = document.getElementById("resultsArea");
-      let html = "";
-
-      // بيانات المشارك
-      html += `<div style="text-align:center;margin-bottom:18px;">
-        <strong>الاسم:</strong> ${participantData ? participantData.name : "-"} &nbsp; | &nbsp;
-        <strong>رقم المشارك:</strong> ${participantNumber}
-      </div>`;
-
-      html += `<table class="results-table">
-        <thead>
-          <tr>
-            <th>اسم المسابقة</th>
-            <th>من</th>
-            <th>إلى</th>
-            <th>النقاط الكلية</th>
-            <th>نقاطك</th>
-          </tr>
-        </thead>
-        <tbody>
-      `;
-
-      let hasAnyScore = false;
-
-      for (const contest of allContests) {
-        const score = (allScores[contest.id] && allScores[contest.id][participantNumber] !== undefined)
-          ? allScores[contest.id][participantNumber]
-          : "";
-        // لا تعرض المسابقات التي ليس للمشارك فيها نقاط
-        if (score === "") continue;
-        hasAnyScore = true;
-
-        // تنسيق لون النقاط
-        let scoreClass = "";
-        if (score < 0) scoreClass = "negative";
-        else if (score == 0) scoreClass = "zero";
-        else scoreClass = "positive";
-
-        // عرض النقاط الكلية للمسابقة كما هي (حتى لو 0)
-        html += `<tr>
-          <td>${contest.name}</td>
-          <td>${contest.startDate}</td>
-          <td>${contest.endDate}</td>
-          <td>${contest.requiredPoints}</td>
-          <td class="${scoreClass}">${score}</td>
-        </tr>`;
-      }
-
-      html += `</tbody></table>`;
-
-      if (!hasAnyScore) {
-        html += `<div style="text-align:center; color:#d32f2f; font-size:17px;">لا توجد نتائج لهذا المشارك حتى الآن.</div>`;
-      }
-
-      resultsArea.innerHTML = html;
+    async function loadParticipants() {
+      const snap = await getDocs(collection(db, "participants"));
+      allParticipants = {};
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        allParticipants[d.participantNumber] = d;
+      });
     }
 
-    // معالجة الاستعلام
-    document.getElementById("scoreQueryForm").onsubmit = async function(e) {
-      e.preventDefault();
-      const participantNumber = document.getElementById("participantNumber").value.trim();
-      document.getElementById("statusMsg").textContent = "";
-      document.getElementById("resultsArea").innerHTML = "";
-      if (!participantNumber) {
-        document.getElementById("statusMsg").textContent = "يرجى إدخال رقم المشارك";
-        document.getElementById("statusMsg").className = "status-msg err";
+    // تحميل الدرجات الحالية للمسابقة
+    async function loadScores(contestId) {
+      const scoreRef = doc(db, "contestScores", contestId);
+      const scoreSnap = await getDoc(scoreRef);
+      let scores = {};
+      if (scoreSnap.exists() && scoreSnap.data().scores) {
+        scores = scoreSnap.data().scores;
+      }
+      return scores;
+    }
+
+    // جلب اسم المسابقة المختارة (نحتاجه للتحقق)
+    function getContestNameById(id) {
+      const found = allContests.find(c => c.id === id);
+      return found ? found.name : "";
+    }
+
+    // عرض جدول الدرجات
+    async function showScoresTable(contestId) {
+      const scoresArea = document.getElementById("scoresArea");
+      scoresArea.innerHTML = "<div>جاري التحميل...</div>";
+
+      await loadParticipants();
+      const scores = await loadScores(contestId);
+
+      selectedContestName = getContestNameById(contestId);
+
+      let html = `<form id="scoresForm"><table class="scores-table"><thead>
+        <tr>
+          <th>رقم المشارك</th>
+          <th>الاسم</th>
+          <th>الفئة العمرية</th>
+          <th>رقم الوحدة</th>
+          <th>النقاط</th>
+        </tr>
+      </thead><tbody>`;
+
+      Object.values(allParticipants)
+        .sort((a, b) => a.participantNumber.localeCompare(b.participantNumber, 'ar'))
+        .forEach(p => {
+          const val = (scores[p.participantNumber] !== undefined) ? scores[p.participantNumber] : "";
+          html += `<tr>
+            <td>${p.participantNumber}</td>
+            <td>${p.name}</td>
+            <td>${p.group || ""}</td>
+            <td>${p.guardian || ""}</td>
+            <td><input type="number" name="score_${p.participantNumber}" value="${val}" step="1" /></td>
+          </tr>`;
+        });
+
+      html += `</tbody></table>
+      <div style="text-align:center"><button type="submit" class="btn-save">💾 حفظ الدرجات</button></div>
+      </form>`;
+
+      scoresArea.innerHTML = html;
+
+      document.getElementById("scoresForm").onsubmit = async function(e){
+        e.preventDefault();
+        await saveScores(contestId, selectedContestName);
+      }
+    }
+
+    // حفظ الدرجات مع التحقق لمسابقات الخصم
+    async function saveScores(contestId, contestName) {
+      const form = document.getElementById("scoresForm");
+      const statusMsg = document.getElementById("statusMsg");
+      let data = {};
+      let valid = true;
+      let errorMsg = "";
+
+      Object.values(allParticipants).forEach(p => {
+        let val = form[`score_${p.participantNumber}`].value;
+        if (val !== "" && !isNaN(val)) {
+          let numVal = parseInt(val, 10);
+
+          // تحقق خاص بمسابقة خصم نقاط (جزاء اداري)
+          if (contestName.trim() === "خصم نقاط (جزاء اداري)") {
+            if (numVal >= 0) {
+              valid = false;
+              errorMsg = "يمكن تسجيل قيم سالبة فقط في هذه المسابقة.";
+            }
+          }
+
+          // تحقق لباقي المسابقات (قيم موجبة أو صفر فقط)
+          else {
+            if (numVal < 0) {
+              valid = false;
+              errorMsg = "لا يمكن تسجيل نقاط سالبة في هذه المسابقة.";
+            }
+          }
+
+          data[p.participantNumber] = numVal;
+        }
+      });
+
+      if (!valid) {
+        statusMsg.textContent = errorMsg;
+        statusMsg.className = "status-msg err";
+        setTimeout(()=>{ statusMsg.textContent = ""; }, 3500);
         return;
       }
-      document.getElementById("statusMsg").textContent = "جارٍ التحميل...";
-      document.getElementById("statusMsg").className = "status-msg";
-      await loadContestsAndScores();
-      participantData = await getParticipantData(participantNumber);
-      if (!participantData) {
-        document.getElementById("statusMsg").textContent = "رقم المشارك غير صحيح أو غير موجود";
-        document.getElementById("statusMsg").className = "status-msg err";
-        return;
+
+      try {
+        await setDoc(doc(db, "contestScores", contestId), {scores: data});
+        statusMsg.textContent = "تم حفظ الدرجات بنجاح ✔️";
+        statusMsg.className = "status-msg ok";
+      } catch (err) {
+        statusMsg.textContent = "حدث خطأ أثناء الحفظ!";
+        statusMsg.className = "status-msg err";
       }
-      document.getElementById("statusMsg").textContent = "";
-      renderResults(participantNumber);
-    };
+      setTimeout(()=>{ statusMsg.textContent = ""; }, 3000);
+    }
+
+    // تهيئة الصفحة
+    async function initPage() {
+      await loadContests();
+      document.getElementById("contestSelect").addEventListener("change", function() {
+        if(this.value) showScoresTable(this.value);
+        else document.getElementById("scoresArea").innerHTML = "";
+      });
+    }
+
+    initPage();
   </script>
 </body>
 </html>
