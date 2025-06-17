@@ -99,7 +99,14 @@
     .score-query-form button:hover {
       background: #1565c0;
     }
-    .results-table {width:100%;border-collapse:collapse;margin: 0 0 28px 0;}
+    .results-table {
+      width: 100%;
+      min-width: 750px;
+      max-width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 28px 0;
+      table-layout: auto;
+    }
     .results-table th, .results-table td {padding:10px 6px;border-bottom:1px solid #ddd;text-align:center;font-size:16px;}
     .results-table th {background:#e3f2fd;}
     .results-table tr:nth-child(even) {background:#f9f9f9;}
@@ -109,24 +116,15 @@
     .status-msg {text-align:center;margin:12px 0;font-size:16px;}
     .status-msg.ok {color:#43a047;}
     .status-msg.err {color:#d32f2f;}
-    footer {
-      background: linear-gradient(90deg,#e3f2fd 70%, #ffd54f 100%);
-      font-size: 9px;
-      color: #004aad;
-      font-family: 'Cairo', sans-serif;
-      text-align: center;
-      padding: 14px 10px 11px 10px;
-      border-radius: 0 0 16px 16px;
+    /* Responsive table scroll */
+    .table-responsive {
       width: 100%;
-      margin: 0;
-      flex-shrink: 0;
-      box-shadow: 0 -1px 14px #ffd54f44;
-      letter-spacing: 1px;
-      z-index: 10;
-      margin-top: auto;
+      overflow-x: auto;
     }
     @media (max-width: 900px) {
       .container { max-width: 98vw; padding: 20px 3vw; }
+      .results-table th, .results-table td { font-size: 14px; padding: 8px 3px; }
+      .results-table th { font-size: 15px; }
     }
     @media (max-width: 600px) {
       header h1 { font-size: 23px; }
@@ -137,8 +135,8 @@
         min-height: unset;
         box-shadow: 0 1px 6px #0001;
       }
-      .results-table th, .results-table td { font-size: 13px; padding: 8px 3px; }
-      .results-table th { font-size: 14px; }
+      .results-table th, .results-table td { font-size: 12px; padding: 7px 2px; }
+      .results-table th { font-size: 13px; }
       .back-home a { font-size: 13px; padding: 7px 9px; }
       .status-msg { font-size: 14px; }
       body { padding-bottom: 0; }
@@ -281,7 +279,7 @@
         <strong>رقم المشارك:</strong> ${participantNumber}
       </div>`;
 
-      html += `<table class="results-table">
+      html += `<div class="table-responsive"><table class="results-table">
         <thead>
           <tr>
             <th>اسم المسابقة</th>
@@ -341,7 +339,7 @@
         </tr>`;
       }
 
-      html += `</tbody></table>`;
+      html += `</tbody></table></div>`;
 
       if (!hasAnyScore) {
         html += `<div style="text-align:center; color:#d32f2f; font-size:17px;">لا توجد نتائج لهذا المشارك حتى الآن.</div>`;
