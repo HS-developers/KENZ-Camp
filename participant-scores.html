@@ -82,7 +82,7 @@
       padding: 7px 10px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      width: 150px;
+      width: 180px;
       text-align: center;
       margin-left: 12px;
     }
@@ -165,8 +165,8 @@
       <a href="index.html">🏠 العودة للرئيسية</a>
     </div>
     <form class="score-query-form" id="scoreQueryForm">
-      <label for="participantNumber">رقم المشارك:</label>
-      <input type="text" id="participantNumber" required maxlength="10" autocomplete="off" />
+      <label for="participantQuery">رقم أو اسم المشارك:</label>
+      <input type="text" id="participantQuery" required maxlength="50" autocomplete="off" placeholder="رقم أو اسم المشارك" />
       <button type="submit">استعلام</button>
     </form>
     <div class="status-msg" id="statusMsg"></div>
@@ -216,10 +216,9 @@
       handleNavDisplay(auth.currentUser);
     });
 
-    // تحميل كل المسابقات ودرجات المشارك
     let allContests = [];
     let allScores = {};
-    let participantData = null;
+    let allParticipants = [];
 
     async function loadContestsAndScores() {
       // تحميل كل المسابقات
@@ -248,24 +247,37 @@
       }
     }
 
-    async function getParticipantData(participantNumber) {
-      // ابحث عن بيانات المشارك
+    async function loadAllParticipants() {
       const snap = await getDocs(collection(db, "participants"));
-      let found = null;
+      allParticipants = [];
       snap.forEach(docSnap => {
-        const d = docSnap.data();
-        if (d.participantNumber === participantNumber) found = d;
+        allParticipants.push(docSnap.data());
       });
-      return found;
     }
 
-    function renderResults(participantNumber) {
+    function findParticipant(query) {
+      query = query.trim();
+      if (!query) return null;
+      // البحث بدقة أولاً، ثم بحث جزئي إذا لم يوجد تطابق دقيق
+      let found = allParticipants.find(
+        p => p.participantNumber === query || (p.name && p.name.trim() === query)
+      );
+      if (found) return found;
+      // بحث جزئي غير حساس لحالة الأحرف أو المسافات الزائدة
+      const qLower = query.toLowerCase();
+      found = allParticipants.find(
+        p => (p.name && p.name.toLowerCase().includes(qLower)) || (p.participantNumber && p.participantNumber.includes(query))
+      );
+      return found || null;
+    }
+
+    function renderResults(participant) {
+      const participantNumber = participant.participantNumber;
       const resultsArea = document.getElementById("resultsArea");
       let html = "";
 
-      // بيانات المشارك
       html += `<div style="text-align:center;margin-bottom:18px;">
-        <strong>الاسم:</strong> ${participantData ? participantData.name : "-"} &nbsp; | &nbsp;
+        <strong>الاسم:</strong> ${participant.name || "-"} &nbsp; | &nbsp;
         <strong>رقم المشارك:</strong> ${participantNumber}
       </div>`;
 
@@ -288,22 +300,30 @@
         const score = (allScores[contest.id] && allScores[contest.id][participantNumber] !== undefined)
           ? allScores[contest.id][participantNumber]
           : "";
-        // لا تعرض المسابقات التي ليس للمشارك فيها نقاط
         if (score === "") continue;
         hasAnyScore = true;
 
-        // تنسيق لون النقاط
         let scoreClass = "";
         if (score < 0) scoreClass = "negative";
         else if (score == 0) scoreClass = "zero";
         else scoreClass = "positive";
 
-        // عرض النقاط الكلية للمسابقة كما هي من قاعدة البيانات (حتى لو 0)
+        // شرط خاص لمسابقات خصم النقاط: اعرض القيمة كما هي (حتى لو 0)
+        // غير ذلك: اعرض القيمة الأصلية أو 10 افتراضي إذا فارغة أو غير رقمية
+        let totalPoints = "";
+        if (contest.name && contest.name.replace(/\s/g, "") === "خصمنقاط(جزاءاداري)") {
+          totalPoints = contest.requiredPoints;
+        } else {
+          totalPoints = (typeof contest.requiredPoints === "number" && !isNaN(contest.requiredPoints))
+            ? contest.requiredPoints
+            : 10;
+        }
+
         html += `<tr>
           <td>${contest.name}</td>
           <td>${contest.startDate}</td>
           <td>${contest.endDate}</td>
-          <td>${typeof contest.requiredPoints === "number" ? contest.requiredPoints : ""}</td>
+          <td>${totalPoints}</td>
           <td class="${scoreClass}">${score}</td>
         </tr>`;
       }
@@ -317,28 +337,28 @@
       resultsArea.innerHTML = html;
     }
 
-    // معالجة الاستعلام
     document.getElementById("scoreQueryForm").onsubmit = async function(e) {
       e.preventDefault();
-      const participantNumber = document.getElementById("participantNumber").value.trim();
+      const participantQuery = document.getElementById("participantQuery").value.trim();
       document.getElementById("statusMsg").textContent = "";
       document.getElementById("resultsArea").innerHTML = "";
-      if (!participantNumber) {
-        document.getElementById("statusMsg").textContent = "يرجى إدخال رقم المشارك";
+      if (!participantQuery) {
+        document.getElementById("statusMsg").textContent = "يرجى إدخال رقم أو اسم المشارك";
         document.getElementById("statusMsg").className = "status-msg err";
         return;
       }
       document.getElementById("statusMsg").textContent = "جارٍ التحميل...";
       document.getElementById("statusMsg").className = "status-msg";
       await loadContestsAndScores();
-      participantData = await getParticipantData(participantNumber);
-      if (!participantData) {
-        document.getElementById("statusMsg").textContent = "رقم المشارك غير صحيح أو غير موجود";
+      await loadAllParticipants();
+      const participant = findParticipant(participantQuery);
+      if (!participant) {
+        document.getElementById("statusMsg").textContent = "رقم أو اسم المشارك غير صحيح أو غير موجود";
         document.getElementById("statusMsg").className = "status-msg err";
         return;
       }
       document.getElementById("statusMsg").textContent = "";
-      renderResults(participantNumber);
+      renderResults(participant);
     };
   </script>
 </body>
