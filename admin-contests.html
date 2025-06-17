@@ -91,12 +91,11 @@
       border-radius: 8px;
       border: 1px solid #ccc;
       margin-top: 5px;
-      font-size: 25px; /* تم التكبير هنا */
+      font-size: 25px;
     }
     table {width:100%; border-collapse:collapse; margin-top:30px;}
     th,td {border:1px solid #ddd;padding:8px;text-align:center;}
     th {background:#e3f2fd;}
-    /* المشاركون بالمسابقة - تنسيق وألوان مميزة */
     .participants-list {
       margin-top: 10px;
       max-height: 180px;
@@ -225,6 +224,7 @@
       box-shadow: 0 -1px 14px #ffd54f44;
       letter-spacing: 1px;
       z-index: 10;
+      margin-top: auto;
     }
     @media (max-width: 900px) {
       .container { max-width: 99vw; padding: 18px 4vw; }
@@ -310,7 +310,6 @@
           <label class="select-all-label"><input type="checkbox" id="selectAll"/> اختيار الكل</label>
           <!-- participants will be loaded here -->
         </div>
-
         <button type="submit">إضافة مسابقة</button>
         <div class="msg" id="msg"></div>
         <div class="error" id="error"></div>
@@ -366,9 +365,7 @@
         const checked = e.target.checked;
         document.querySelectorAll(".participant-checkbox").forEach(cb => cb.checked = checked);
       } else if(e.target && e.target.classList.contains("participant-checkbox")) {
-        // إذا تم إلغاء تحديد أي واحد، الغِ تحديد الكل
         if(!e.target.checked) document.getElementById("selectAll").checked = false;
-        // إذا تم تحديد الجميع يدويًا، فعّل "اختيار الكل"
         else {
           const all = document.querySelectorAll(".participant-checkbox");
           const checkedCount = Array.from(all).filter(cb => cb.checked).length;
@@ -377,17 +374,17 @@
       }
     });
 
-    // ---------- الكود الخاص بتعيين النقاط الكلية صفر تلقائياً ----------
+    // تعيين النقاط الكلية إلى صفر تلقائياً إذا كانت المسابقة خصم نقاط (باحترافية مع تجاهل المسافات)
     document.getElementById("contestName").addEventListener("input", function() {
-      var val = this.value.trim();
+      var val = this.value.replace(/\s/g, "").toLowerCase();
       var pointsInput = document.getElementById("requiredPoints");
-      if (val === "خصم نقاط (جزاء اداري)") {
+      // يدعم كل الصيغ: خصم نقاط (جزاء اداري) أو خصم نقاط(جزاء اداري) أو بها مسافات مختلفة
+      if (val === "خصمنقاط(جزاءاداري)" || val === "خصمنقاط(جزاءإداري)") {
         pointsInput.value = 0;
       } else if (pointsInput.value == 0 || pointsInput.value === "0") {
-        pointsInput.value = 10; // أو أي قيمة افتراضية تريدها
+        pointsInput.value = 10;
       }
     });
-    // -----------------------------------------------------------------
 
     // إضافة مسابقة جديدة
     document.getElementById('addForm').onsubmit = async function(e) {
@@ -400,7 +397,6 @@
       const requiredPoints = document.getElementById("requiredPoints").value;
       const participants = Array.from(document.querySelectorAll(".participant-checkbox:checked")).map(cb => cb.value);
 
-      // التصحيح هنا: التحقق أن الحقول غير فارغة وغير NaN (يسمح بالقيمة صفر)
       if (!name || !startDate || !endDate || requiredPoints === "" || isNaN(Number(requiredPoints))) {
         document.getElementById("error").textContent = "يرجى تعبئة جميع الحقول";
         return;
@@ -415,7 +411,6 @@
         });
         document.getElementById("msg").textContent = "تمت إضافة المسابقة!";
         this.reset();
-        // إعادة تعيين اختيار الكل
         document.getElementById("selectAll").checked = false;
         document.querySelectorAll(".participant-checkbox").forEach(cb => cb.checked = false);
         loadContests();
