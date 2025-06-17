@@ -359,7 +359,16 @@
       pl.innerHTML += html;
     }
     loadParticipantsList();
-
+   // اجعل عدد النقاط الكلية صفر إذا كان اسم المسابقة "خصم نقاط(جزاء اداري)"
+   document.getElementById("contestName").addEventListener("input", function() {
+   var val = this.value.trim();
+   var pointsInput = document.getElementById("requiredPoints");
+   if (val === "خصم نقاط(جزاء اداري)") {
+    pointsInput.value = 0;
+  } else if (pointsInput.value == 0 || pointsInput.value === "0") {
+    pointsInput.value = 10; // أو القيمة الافتراضية التي تريدها
+  }
+});
     // منطق اختيار الكل
     document.getElementById("participantsList").addEventListener("change", function(e){
       if(e.target && e.target.id === "selectAll") {
