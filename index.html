@@ -14,14 +14,29 @@
       box-sizing: border-box;
     }
     body {
-      font-family: 'Cairo', sans-serif;
-      min-height: 100vh;
-      min-height: 100dvh;
-      margin: 0;
-      background: linear-gradient(135deg, #e3f2fd 0%, #fffde7 100%);
-      display: flex;
-      flex-direction: column;
-    }
+  font-family: 'Cairo', sans-serif;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  /* متدرج ألوان هادئة متحرك */
+  background: linear-gradient(120deg, #e3f2fd, #fffde7, #c8e6c9, #ffd54f, #ffecb3, #bbdefb);
+  background-size: 400% 400%;
+  animation: gradientBG 22s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
     header {
       text-align: center;
       padding: 38px 10px 16px 10px;
