@@ -17,7 +17,8 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 56px; /* مساحة للفوتر حتى لا يغطي المحتوى */
+      /* مهم: مساحة للفوتر حتى لا يغطي المحتوى */
+      padding-bottom: 60px;
     }
     header {
       text-align: center;
@@ -28,7 +29,6 @@
       position: relative;
       z-index: 1;
     }
-    
     header h1 {
       margin: 0 0 2px 0;
       font-size: 2.2em;
@@ -80,11 +80,9 @@
       display:inline-block;
     }
     .back-home a:hover {background:#0056b3;}
-
     .medal {font-size:22px;}
     .group {font-size:15px;color:#1e88e5;}
     .participant-number {font-weight:bold;color:#e53935;}
-    /* تعديل زر عرض لوحة الشرف ليأخذ مساحة أكبر ووسط الصفحة */
     .honor-btn-bar {
       text-align: center;
       margin: 20px 0;
@@ -105,20 +103,22 @@
     #honorTableWrap {margin-top:20px;}
     .msg {text-align:center; color:#d32f2f; font-size:17px; margin:30px 0;}
     footer {
-  background: linear-gradient(90deg,#e3f2fd 70%, #ffd54f 100%);
-  font-size: 9px;
-  color: #004aad;
-  font-family: 'Cairo', sans-serif;
-  text-align: center;
-  padding: 14px 10px 11px 10px;
-  border-radius: 0 0 16px 16px;
-  width: 100%;
-  margin: 0;
-  flex-shrink: 0;
-  box-shadow: 0 -1px 14px #ffd54f44;
-  letter-spacing: 1px;
-  z-index: 10;
-}
+      background: linear-gradient(90deg,#e3f2fd 70%, #ffd54f 100%);
+      font-size: 12px;
+      color: #004aad;
+      font-family: 'Cairo', sans-serif;
+      text-align: center;
+      padding: 14px 10px 11px 10px;
+      border-radius: 0 0 16px 16px;
+      width: 100%;
+      margin: 0;
+      box-shadow: 0 -1px 14px #ffd54f44;
+      letter-spacing: 1px;
+      z-index: 10;
+      /* تثبيت الفوتر في الأسفل */
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+    }
     @media (max-width: 600px) {
       .container { max-width: 99vw; margin: 10px auto; padding: 10px 2vw; }
       table { font-size: 13px; }
@@ -129,8 +129,8 @@
         min-width: 90vw;
         border-radius: 10px;
       }
-      footer { font-size: 12px; }
-      body { padding-bottom: 56px; }
+      footer { font-size: 10px; padding: 10px 3px 8px 3px; }
+      body { padding-bottom: 60px; }
     }
   </style>
 </head>
@@ -160,7 +160,7 @@
     <div class="msg" id="msgBox" style="display:none"></div>
   </div>
   <footer>
-    All Right Reserved © 2025 Genius Tech Co
+    جميع الحقوق محفوظة © 2025 Genius Tech Co
   </footer>
   <script type="module">
     // Firebase imports
