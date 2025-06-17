@@ -295,6 +295,8 @@
       `;
 
       let hasAnyScore = false;
+      let totalScore = 0;
+      let totalMaxPoints = 0;
 
       for (const contest of allContests) {
         const score = (allScores[contest.id] && allScores[contest.id][participantNumber] !== undefined)
@@ -302,11 +304,7 @@
           : "";
         if (score === "") continue;
         hasAnyScore = true;
-
-        let scoreClass = "";
-        if (score < 0) scoreClass = "negative";
-        else if (score == 0) scoreClass = "zero";
-        else scoreClass = "positive";
+        if (!isNaN(score)) totalScore += Number(score);
 
         // شرط خاص لمسابقات خصم النقاط: اعرض القيمة كما هي (حتى لو 0)
         // غير ذلك: اعرض القيمة الأصلية أو 10 افتراضي إذا فارغة أو غير رقمية
@@ -318,6 +316,12 @@
             ? contest.requiredPoints
             : 10;
         }
+        if (!isNaN(totalPoints)) totalMaxPoints += Number(totalPoints);
+
+        let scoreClass = "";
+        if (score < 0) scoreClass = "negative";
+        else if (score == 0) scoreClass = "zero";
+        else scoreClass = "positive";
 
         html += `<tr>
           <td>${contest.name}</td>
@@ -325,6 +329,15 @@
           <td>${contest.endDate}</td>
           <td>${totalPoints}</td>
           <td class="${scoreClass}">${score}</td>
+        </tr>`;
+      }
+
+      // إجمالي النقاط
+      if (hasAnyScore) {
+        html += `<tr>
+          <td colspan="3" style="text-align:left; font-weight:bold; background:#e3f2fd;">الإجمالي</td>
+          <td style="font-weight:bold; color:#1976d2;">${totalMaxPoints}</td>
+          <td style="font-weight:bold; color:#1976d2;">${totalScore}</td>
         </tr>`;
       }
 
