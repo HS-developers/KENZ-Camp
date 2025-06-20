@@ -21,13 +21,47 @@
       flex-direction: column;
     }
     header {
-      text-align: center;
       padding: 38px 10px 16px 10px;
       background: linear-gradient(90deg, #1976d2 40%, #ffd54f 110%);
       box-shadow: 0 2px 16px #0001;
       border-radius: 0 0 24px 24px;
       position: relative;
       z-index: 1;
+      direction: rtl;
+      text-align: unset;
+      width: 100%;
+    }
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      width: 100%;
+    }
+    .header-title {
+      text-align: right;
+      flex: 1 1 0%;
+      padding-right: 40px;
+    }
+    .kenz-logo {
+      width: 160px; height: 160px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px #1976d244;
+      overflow: hidden;
+      margin: 0 0 0 12px;
+      flex-shrink: 0;
+    }
+    .kenz-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+      display: block;
+      background: #82f6dd;
     }
     header h1 {
       margin: 0 0 2px 0;
@@ -37,7 +71,41 @@
       letter-spacing: 2px;
       text-shadow: 0 1px 6px #fff5, 0 1px 0 #ffd54f88;
     }    
-    header h2 { margin: 8px 0 0; font-size: 22px; color: #ff9800; }
+    header h2 { 
+      margin: 8px 0 0;
+      font-size: 22px;
+      color: #ff9800;
+      text-align: center;
+      font-weight: 700;
+      text-shadow: 0 1px 4px #1976d299;
+      letter-spacing: 1px;
+    }
+    /* Responsive header/logo */
+    @media (max-width: 700px) {
+      .kenz-logo { width: 80px; height: 80px;}
+      .header-row { gap: 11px; }
+      header h1 { font-size: 1.3em; }
+      header h2 { font-size: 1.07em; }
+    }
+    @media (max-width: 500px) {
+      .header-row { 
+        flex-direction: row; 
+        align-items: center;
+        gap: 7px;
+      }
+      .header-title { 
+        text-align: right; 
+        padding-right: 6px; 
+      }
+      .kenz-logo { 
+        width: 55px; 
+        height: 55px; 
+        margin: 0 0 0 5px; 
+      }
+      header h1 { font-size: 1em; }
+      header h2 { font-size: .93em; }
+      header { padding: 13px 2px 8px 2px; border-radius: 0 0 10px 10px; }
+    }
     .container {
       width: 100%;
       max-width: 1100px;
@@ -239,47 +307,16 @@
 </head>
 <body>
   <header>
-    <h1>مخيم كنز الصيفي</h1>
-    <h2>🏆 إدارة المسابقات 🏆</h2>
+    <div class="header-row">
+      <div class="header-title">
+        <h1>مخيم كنز الصيفي</h1>
+        <h2>🏆 إدارة المسابقات 🏆</h2>
+      </div>
+      <div class="kenz-logo">
+        <img src="kenz.jpg" alt="شعار مخيم كنز" onerror="this.style.display='none'">
+      </div>
+    </div>
   </header>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    const firebaseConfig = {
-      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
-      authDomain: "kenz-camp.firebaseapp.com",
-      projectId: "kenz-camp",
-    };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    function handleNavDisplay(user) {
-      if (user) {
-        document.getElementById("adminLink").style.display = "inline-block";
-        document.getElementById("contestsLink").style.display = "inline-block";
-        document.getElementById("scoresLink").style.display = "inline-block";
-        document.getElementById("honorLink").style.display = "inline-block";
-        document.getElementById("logoutLink").style.display = "inline-block";
-        document.getElementById("loginLink").style.display = "none";
-      } else {
-        document.getElementById("adminLink").style.display = "none";
-        document.getElementById("contestsLink").style.display = "none";
-        document.getElementById("scoresLink").style.display = "none";
-        document.getElementById("honorLink").style.display = "none";
-        document.getElementById("logoutLink").style.display = "none";
-        document.getElementById("loginLink").style.display = "inline-block";
-      }
-    }
-    onAuthStateChanged(auth, (user) => {
-      if (!user) window.location.href = "login.html";
-      else handleNavDisplay(user);
-    });
-    window.adminLogout = function() {
-      signOut(auth).then(() => { window.location.href = "login.html"; });
-    }
-    window.addEventListener('DOMContentLoaded', () => {
-      handleNavDisplay(auth.currentUser);
-    });
-  </script>
   <div class="nav">
     <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين</a>
     <a href="admin-contests.html" id="contestsLink" style="display:none">🏆 إدارة المسابقات</a>
@@ -335,6 +372,44 @@
   <footer>
     جميع الحقوق محفوظة © 2025 Genius Tech Co
   </footer>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
+      authDomain: "kenz-camp.firebaseapp.com",
+      projectId: "kenz-camp",
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    function handleNavDisplay(user) {
+      if (user) {
+        document.getElementById("adminLink").style.display = "inline-block";
+        document.getElementById("contestsLink").style.display = "inline-block";
+        document.getElementById("scoresLink").style.display = "inline-block";
+        document.getElementById("honorLink").style.display = "inline-block";
+        document.getElementById("logoutLink").style.display = "inline-block";
+        document.getElementById("loginLink").style.display = "none";
+      } else {
+        document.getElementById("adminLink").style.display = "none";
+        document.getElementById("contestsLink").style.display = "none";
+        document.getElementById("scoresLink").style.display = "none";
+        document.getElementById("honorLink").style.display = "none";
+        document.getElementById("logoutLink").style.display = "none";
+        document.getElementById("loginLink").style.display = "inline-block";
+      }
+    }
+    onAuthStateChanged(auth, (user) => {
+      if (!user) window.location.href = "login.html";
+      else handleNavDisplay(user);
+    });
+    window.adminLogout = function() {
+      signOut(auth).then(() => { window.location.href = "login.html"; });
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      handleNavDisplay(auth.currentUser);
+    });
+  </script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
