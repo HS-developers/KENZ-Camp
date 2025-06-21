@@ -216,6 +216,10 @@
       box-shadow: 0 2px 10px #43a04722;
       transition: background 0.2s, color 0.2s, box-shadow 0.2s;
       margin-top: 7px;
+      margin-right: 8px;
+    }
+    .summary button:last-child {
+      margin-right: 0;
     }
     .summary button:hover {
       background: linear-gradient(90deg,#ffd54f 60%, #43a047 100%);
@@ -341,6 +345,7 @@
     <div class="summary">
       <p id="participant-count">عدد المشاركين: جاري العد...</p>
       <button onclick="window.print()">🖨️ طباعة القائمة</button>
+      <button onclick="exportToExcel()">📥 تصدير إلى Excel</button>
     </div>
     <div class="back-button">
       <a href="index.html">⬅ العودة إلى صفحة التسجيل</a>
@@ -359,6 +364,8 @@
   <footer>
     جميع الحقوق محفوظة © 2025 Genius Tech Co
   </footer>
+  <!-- مكتبة XLSX لتصدير الجدول إلى Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -460,6 +467,19 @@
       `);
       win.document.close();
       win.print();
+    };
+
+    // دالة تصدير الجدول إلى Excel
+    window.exportToExcel = function() {
+      const table = document.querySelector(".table-container table");
+      // إزالة زر البطاقة من التصدير
+      let clone = table.cloneNode(true);
+      // إزالة العمود الأخير (بطاقة) من كل صف
+      Array.from(clone.rows).forEach(row => row.deleteCell(-1));
+      const ws = XLSX.utils.table_to_sheet(clone, {raw: true});
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "المشاركون");
+      XLSX.writeFile(wb, "قائمة_المشاركين.xlsx");
     };
   </script>
 </body>
