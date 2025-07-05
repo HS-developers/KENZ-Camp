@@ -88,10 +88,8 @@
       text-shadow: 0 1px 4px #1976d299;
       letter-spacing: 1px;
     }
-
-    /* تحسين الهيدر للموبايل: يبقى أفقي دائمًا */
     @media (max-width: 700px) {
-      .kenz-logo { width: 80px; height: 80px;}
+      .kenz-logo { width: 65px; height: 65px;}
       .header-row { gap: 11px; }
       header h1 { font-size: 1.3em; }
       header h2 { font-size: 1.07em; }
@@ -107,15 +105,14 @@
         padding-right: 6px; 
       }
       .kenz-logo { 
-        width: 55px; 
-        height: 55px; 
+        width: 40px; 
+        height: 40px; 
         margin: 0 0 0 5px; 
       }
       header h1 { font-size: 1em; }
       header h2 { font-size: .93em; }
       header { padding: 13px 2px 8px 2px; border-radius: 0 0 10px 10px; }
     }
-
     .main-content {
       flex: 1 0 auto;
       max-width: 540px;
@@ -215,9 +212,9 @@
       text-align: right;
     }
     .nav {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
       align-items: stretch;
       width: 100%;
       max-width: 540px;
@@ -260,31 +257,12 @@
       transform: scale(1.03) translateY(-2px);
       text-shadow: 0 2px 12px #fff5;
     }
-    .nav a#adminLink { background: linear-gradient(90deg,#8e24aa 70%, #1976d2 100%);}
-    .nav a#contestsLink { background: linear-gradient(90deg,#1e88e5 60%, #ffd54f 100%); color: #004aad; font-weight: 900;}
-    .nav a#scoresLink { background: linear-gradient(90deg,#43a047 70%, #ffd54f 100%); color: #fff;}
-    .nav a#honorLink { background: linear-gradient(90deg,#ff9800 65%, #ffd54f 100%); color: #004aad; font-weight: 900;}
-    .nav a#loginLink { background: linear-gradient(90deg,#ffd54f 60%, #ff9800 100%); color: #004aad; font-weight: 900;}
+    .nav a#queryScoresLink { background: linear-gradient(90deg, #1e88e5 60%, #ffd54f 100%); color: #004aad; font-weight: 900;}
+    .nav a#scheduleLink { background: linear-gradient(90deg,#ff9800 65%, #ffd54f 100%); color: #004aad; font-weight: 900;}
     .nav a#logoutLink { background: linear-gradient(90deg,#d32f2f 70%, #ffd54f 100%); color: #fff;}
-    .nav a#adminLink:hover { background: linear-gradient(90deg,#5e1972 80%, #43a047 100%);}
-    .nav a#contestsLink:hover { background: linear-gradient(90deg,#ffd54f 75%, #1976d2 100%); color: #004aad;}
-    .nav a#scoresLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #43a047 100%);}
-    .nav a#honorLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #ff9800 100%); color: #d84315;}
-    .nav a#loginLink:hover { background: linear-gradient(90deg,#ff9800 70%, #ffd54f 100%);}
+    .nav a#queryScoresLink:hover { background: linear-gradient(90deg,#ffd54f 75%, #1976d2 100%); color: #004aad;}
+    .nav a#scheduleLink:hover { background: linear-gradient(90deg,#ffd54f 65%, #ff9800 100%); color: #d84315;}
     .nav a#logoutLink:hover { background: linear-gradient(90deg,#ffd54f 80%, #d32f2f 100%); color: #d32f2f;}
-    .nav {
-      justify-items: stretch;
-    }
-    .nav > a {
-      min-width: 0;
-    }
-    .nav .spacer {
-      pointer-events: none;
-      background: transparent;
-      box-shadow: none;
-      border: none;
-      visibility: hidden;
-    }
     @media (max-width: 900px) {
       .main-content, .nav {
         max-width: 100vw;
@@ -300,7 +278,7 @@
         padding-left: 1vw;
         padding-right: 1vw;
       }
-      .nav { grid-template-columns: 1fr; gap: 5px; }
+      .nav { gap: 5px; }
       .main-content { padding: 10px 2px 10px 2px; border-radius: 0;}
       .form-heading { font-size: 1.03em; padding: 8px; }
       .welcome { font-size: 1em; }
@@ -330,33 +308,28 @@
       z-index: 10;
     }
   </style>
+  <!-- تحويل أي زائر غير مسجل دخول مباشرة إلى صفحة تسجيل الدخول -->
   <script>
-    // Center last row buttons in .nav grid if row is not full (pure JS, no dependencies)
-    document.addEventListener('DOMContentLoaded', function () {
-      const nav = document.querySelector('.nav');
-      if (!nav) return;
-      function centerLastRow() {
-        nav.querySelectorAll('.spacer').forEach(e=>e.remove());
-        const cols = getComputedStyle(nav).gridTemplateColumns.split(' ').length;
-        const btns = Array.from(nav.children).filter(el => el.tagName === 'A');
-        const remainder = btns.length % cols;
-        if (remainder !== 0 && cols > 1) {
-          const needed = cols - remainder;
-          const half = Math.floor(needed/2);
-          for(let i=0; i<half; i++) {
-            const sp = document.createElement('a');
-            sp.className = 'spacer';
-            nav.appendChild(sp);
-          }
-          for(let i=half; i<needed; i++) {
-            const sp = document.createElement('a');
-            sp.className = 'spacer';
-            nav.appendChild(sp);
-          }
-        }
+    // Firebase Auth يعمل حماية فعلية، لكن هذا التحويل يزيد سرعة الانتقال على GitHub Pages
+    if (!localStorage.getItem('user') && !window.location.pathname.endsWith("login.html")) {
+      window.location.href = "login.html";
+    }
+  </script>
+  <!-- حماية الصفحة من الدخول المباشر (Firebase الحماية الحقيقية) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
+      authDomain: "kenz-camp.firebaseapp.com",
+      projectId: "kenz-camp",
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html";
       }
-      centerLastRow();
-      window.addEventListener('resize', centerLastRow);
     });
   </script>
 </head>
@@ -381,7 +354,7 @@
     <form id="registrationForm">
       <label for="name">اسم المشارك (ثلاثي):</label>
       <input type="text" id="name" name="name" required pattern="^\s*\S+\s+\S+\s+\S+.*$" title="من فضلك أدخل الاسم ثلاثيًا">
-      <label for="age">السن:</label>
+      <label for="age">العمر:</label>
       <input type="number" id="age" name="age" required>
       <div id="age-warning" class="warning"></div>
       <label for="guardian">رقم الوحدة:</label>
@@ -400,13 +373,8 @@
     </form>
     <div style="height:8px"></div>
     <div class="nav">
-      <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين</a>
-      <a href="admin-contests.html" id="contestsLink" style="display:none">🏆 إدارة المسابقات</a>
-      <a href="admin-scores.html" id="scoresLink" style="display:none">📝 تسجيل النقاط</a>
-      <a href="honor-board.html" id="honorLink" style="display:none">🏆 لوحة الشرف</a>
       <a href="participant-scores.html" id="queryScoresLink">🔍 استعلام عن النقاط</a>
-      <a href="schedule.html">📅 الجدول الزمني</a>
-      <a href="login.html" id="loginLink">دخول المشرفين</a>
+      <a href="schedule.html" id="scheduleLink">📅 الجدول الزمني</a>
       <a href="#" id="logoutLink" style="display:none">تسجيل الخروج</a>
     </div>
   </div>
@@ -426,14 +394,9 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // إظهار أزرار الإدارة للمشرفين فقط
+    // إظهار زر الخروج إذا كان المستخدم مسجل دخول
     function handleNavDisplay(user) {
-      document.getElementById("adminLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("contestsLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("scoresLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("honorLink").style.display = user ? "inline-block" : "none";
       document.getElementById("logoutLink").style.display = user ? "inline-block" : "none";
-      document.getElementById("loginLink").style.display = user ? "none" : "inline-block";
     }
     onAuthStateChanged(auth, (user) => {
       handleNavDisplay(user);
