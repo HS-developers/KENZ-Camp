@@ -308,14 +308,7 @@
       z-index: 10;
     }
   </style>
-  <!-- تحويل أي زائر غير مسجل دخول مباشرة إلى صفحة تسجيل الدخول -->
-  <script>
-    // Firebase Auth يعمل حماية فعلية، لكن هذا التحويل يزيد سرعة الانتقال على GitHub Pages
-    if (!localStorage.getItem('user') && !window.location.pathname.endsWith("login.html")) {
-      window.location.href = "login.html";
-    }
-  </script>
-  <!-- حماية الصفحة من الدخول المباشر (Firebase الحماية الحقيقية) -->
+  <!-- حماية الصفحة من الدخول المباشر -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
