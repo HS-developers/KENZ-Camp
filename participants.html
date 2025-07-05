@@ -4,6 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>قائمة المشاركين - مخيم كنز</title>
+  <!-- حماية الأدمن -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
+      authDomain: "kenz-camp.firebaseapp.com",
+      projectId: "kenz-camp",
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists() || !userSnap.data().isAdmin) {
+          window.location.href = "index.html";
+        }
+      }
+    });
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;900&display=swap" rel="stylesheet" />
   <style>
     body {
@@ -312,14 +338,14 @@
     </div>
   </header>
   <div class="nav">
-    <a href="participants.html" id="adminLink" style="display:none">👥 عرض المشاركين</a>
-    <a href="admin-contests.html" id="contestsLink" style="display:none">🏆 إدارة المسابقات</a>
-    <a href="admin-scores.html" id="scoresLink" style="display:none">📝 تسجيل النقاط</a>
-    <a href="honor-board.html" id="honorLink" style="display:none">🏆 لوحة الشرف</a>
+    <a href="participants.html" id="adminLink" style="display:inline-block">👥 عرض المشاركين</a>
+    <a href="admin-contests.html" id="contestsLink" style="display:inline-block">🏆 إدارة المسابقات</a>
+    <a href="admin-scores.html" id="scoresLink" style="display:inline-block">📝 تسجيل النقاط</a>
+    <a href="honor-board.html" id="honorLink" style="display:inline-block">🏆 لوحة الشرف</a>
     <a href="participant-scores.html" id="queryScoresLink">🔍 استعلام عن النقاط</a>
     <a href="schedule.html">📅 الجدول الزمني</a>
-    <a href="login.html" id="loginLink">دخول المشرفين</a>
-    <a href="#" onclick="adminLogout()" id="logoutLink" style="display:none">تسجيل خروج</a>
+    <a href="login.html" id="loginLink" style="display:none">دخول المشرفين</a>
+    <a href="#" onclick="adminLogout()" id="logoutLink" style="display:inline-block">تسجيل خروج</a>
   </div>
   <div class="table-container">
     <h2>قائمة المشاركين</h2>
@@ -378,32 +404,10 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    function handleNavDisplay(user) {
-      if (user) {
-        document.getElementById("adminLink").style.display = "inline-block";
-        document.getElementById("contestsLink").style.display = "inline-block";
-        document.getElementById("scoresLink").style.display = "inline-block";
-        document.getElementById("honorLink").style.display = "inline-block";
-        document.getElementById("logoutLink").style.display = "inline-block";
-        document.getElementById("loginLink").style.display = "none";
-      } else {
-        document.getElementById("adminLink").style.display = "none";
-        document.getElementById("contestsLink").style.display = "none";
-        document.getElementById("scoresLink").style.display = "none";
-        document.getElementById("honorLink").style.display = "none";
-        document.getElementById("logoutLink").style.display = "none";
-        document.getElementById("loginLink").style.display = "inline-block";
-      }
-    }
-    onAuthStateChanged(auth, (user) => {
-      handleNavDisplay(user);
-    });
+    // تسجيل الخروج
     window.adminLogout = function() {
       signOut(auth).then(() => { window.location.href = "login.html"; });
     }
-    window.addEventListener('DOMContentLoaded', () => {
-      handleNavDisplay(auth.currentUser);
-    });
 
     // تحميل المشاركين
     const db = getFirestore(app);
@@ -472,9 +476,7 @@
     // دالة تصدير الجدول إلى Excel
     window.exportToExcel = function() {
       const table = document.querySelector(".table-container table");
-      // إزالة زر البطاقة من التصدير
       let clone = table.cloneNode(true);
-      // إزالة العمود الأخير (بطاقة) من كل صف
       Array.from(clone.rows).forEach(row => row.deleteCell(-1));
       const ws = XLSX.utils.table_to_sheet(clone, {raw: true});
       const wb = XLSX.utils.book_new();
