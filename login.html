@@ -33,7 +33,7 @@
   </div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     const firebaseConfig = {
       apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
@@ -44,10 +44,9 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // حماية: لو المستخدم بالفعل مسجّل دخول (مرة واحدة عند فتح الصفحة فقط)
-    auth.onAuthStateChanged(async (user) => {
+    // لو المستخدم بالفعل سجل دخول، نعيد توجيهه فوراً (إدمن > participants.html، عادي > index.html)
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // جلب بيانات المستخدم من قاعدة بيانات Firestore
         const userRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userRef);
         let isAdmin = false;
