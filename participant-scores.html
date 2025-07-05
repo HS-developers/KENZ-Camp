@@ -77,7 +77,6 @@
       text-shadow: 0 1px 4px #1976d299;
       letter-spacing: 1px;
     }
-    /* Responsive header/logo */
     @media (max-width: 700px) {
       .kenz-logo { width: 80px; height: 80px;}
       .header-row { gap: 11px; }
@@ -193,7 +192,6 @@
     .status-msg {text-align:center;margin:12px 0;font-size:16px;}
     .status-msg.ok {color:#43a047;}
     .status-msg.err {color:#d32f2f;}
-    /* Responsive table scroll */
     .table-responsive {
       width: 100%;
       overflow-x: auto;
@@ -235,6 +233,23 @@
       margin: 0;
     }
   </style>
+  <!-- حماية الصفحة من الدخول المباشر -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
+      authDomain: "kenz-camp.firebaseapp.com",
+      projectId: "kenz-camp",
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
 </head>
 <body>
   <header>
@@ -248,14 +263,12 @@
       </div>
     </div>
   </header>
-  <!-- أزرار الأدمن (تظهر فقط للمشرف) -->
   <div class="admin-nav" id="adminNav" style="display:none">
     <a href="participants.html" id="adminLink">👥 عرض المشاركين</a>
     <a href="admin-contests.html" id="contestsLink">🏆 إدارة المسابقات</a>
     <a href="admin-scores.html" id="scoresLink">📝 تسجيل النقاط</a>
     <a href="honor-board.html" id="honorLink">🏆 لوحة الشرف</a>
   </div>
-  <!-- أزرار عامة للجميع -->
   <div class="nav">
     <a href="participant-scores.html" id="queryScoresLink">🔍 استعلام عن النقاط</a>
     <a href="schedule.html" id="scheduleLink">📅 الجدول الزمني</a>
@@ -324,7 +337,6 @@
     let allParticipants = [];
 
     async function loadContestsAndScores() {
-      // تحميل كل المسابقات
       const contestsSnap = await getDocs(collection(db, "contests"));
       allContests = [];
       contestsSnap.forEach(docSnap => {
@@ -338,7 +350,6 @@
         });
       });
 
-      // تحميل كل الدرجات للمسابقات
       allScores = {};
       for (const contest of allContests) {
         const scoreSnap = await getDoc(doc(db, "contestScores", contest.id));
@@ -361,12 +372,10 @@
     function findParticipant(query) {
       query = query.trim();
       if (!query) return null;
-      // البحث بدقة أولاً، ثم بحث جزئي إذا لم يوجد تطابق دقيق
       let found = allParticipants.find(
         p => p.participantNumber === query || (p.name && p.name.trim() === query)
       );
       if (found) return found;
-      // بحث جزئي غير حساس لحالة الأحرف أو المسافات الزائدة
       const qLower = query.toLowerCase();
       found = allParticipants.find(
         p => (p.name && p.name.toLowerCase().includes(qLower)) || (p.participantNumber && p.participantNumber.includes(query))
@@ -409,8 +418,6 @@
         hasAnyScore = true;
         if (!isNaN(score)) totalScore += Number(score);
 
-        // شرط خاص لمسابقات خصم النقاط: اعرض القيمة كما هي (حتى لو 0)
-        // غير ذلك: اعرض القيمة الأصلية أو 10 افتراضي إذا فارغة أو غير رقمية
         let totalPoints = "";
         if (contest.name && contest.name.replace(/\s/g, "") === "خصمنقاط(جزاءاداري)") {
           totalPoints = contest.requiredPoints;
@@ -435,7 +442,6 @@
         </tr>`;
       }
 
-      // إجمالي النقاط
       if (hasAnyScore) {
         html += `<tr>
           <td colspan="3" style="text-align:left; font-weight:bold; background:#e3f2fd;">الإجمالي</td>
