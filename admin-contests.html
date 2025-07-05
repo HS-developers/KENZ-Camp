@@ -5,6 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>إدارة المسابقات - مخيم كنز</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <!-- حماية الأدمن -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBic0WV6onX8hafXI09_6N-HUdNiAMJJS0",
+      authDomain: "kenz-camp.firebaseapp.com",
+      projectId: "kenz-camp",
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists() || !userSnap.data().isAdmin) {
+          window.location.href = "index.html";
+        }
+      }
+    });
+  </script>
   <style>
     html, body {
       height: 100%;
@@ -80,7 +106,6 @@
       text-shadow: 0 1px 4px #1976d299;
       letter-spacing: 1px;
     }
-    /* Responsive header/logo */
     @media (max-width: 700px) {
       .kenz-logo { width: 80px; height: 80px;}
       .header-row { gap: 11px; }
@@ -453,7 +478,6 @@
     document.getElementById("contestName").addEventListener("input", function() {
       var val = this.value.replace(/\s/g, "").toLowerCase();
       var pointsInput = document.getElementById("requiredPoints");
-      // يدعم كل الصيغ: خصم نقاط (جزاء اداري) أو خصم نقاط(جزاء اداري) أو بها مسافات مختلفة
       if (val === "خصمنقاط(جزاءاداري)" || val === "خصمنقاط(جزاءإداري)") {
         pointsInput.value = 0;
       } else if (pointsInput.value == 0 || pointsInput.value === "0") {
